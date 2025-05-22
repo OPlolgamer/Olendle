@@ -65,6 +65,16 @@
       cursor: pointer;
     }
     button:hover { background: rgba(255,255,255,0.2); }
+    #hintBox {
+      margin: 1rem auto;
+      padding: 0.5rem 1rem;
+      background: rgba(200,200,200,0.4);
+      color: #000;
+      border-radius: 4px;
+      width: 60%;
+      cursor: default;
+    }
+    #hintBox.active { background: rgba(255,255,255,0.9); }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -85,12 +95,31 @@
     img.person-photo {
       width: 60px; height: 60px; object-fit: cover; border-radius: 50%;
     }
+    /* Win overlay */
+    #winOverlay {
+      position: fixed; top: 0; left: 0; right:0; bottom:0;
+      background: rgba(0,0,0,0.8);
+      display: flex; align-items:center; justify-content:center;
+      opacity: 0; pointer-events:none; transition: opacity 0.5s;
+    }
+    #winOverlay.show {
+      opacity:1; pointer-events:auto;
+    }
+    #winContent {
+      background: #fff; color:#000;
+      padding:2rem; border-radius:8px; text-align:center;
+      max-width: 90%; 
+    }
+    #winContent img { width:150px; height:150px; border-radius:50%; object-fit:cover; }
+    #winContent h2 { margin:1rem 0; }
   </style>
 </head>
 <body>
   <main>
     <h1>Ølendle</h1>
     <div class="byline">By Morten</div>
+
+    <div id="hintBox">Residence hint in <span id="hintCount">5</span> guesses</div>
 
     <div class="autocomplete">
       <input type="text" id="guessInput" placeholder="Type a name…" autocomplete="off" />
@@ -115,102 +144,177 @@
     </table>
   </main>
 
+  <div id="winOverlay">
+    <div id="winContent">
+      <h2>Today’s Ølendle was&nbsp;<span id="winName"></span></h2>
+      <img id="winPhoto" src="" alt="">
+    </div>
+  </div>
+
   <script>
+    // Data & config
     const placeholder = 'no-image.png';
+    const MS_PER_DAY = 24*60*60*1000;
+    const todayKey = 'olendle-date';
+    const guessesKey = 'olendle-guesses';
+    const hintKey = 'olendle-hint';
 
     const people = [
-      { name: 'Morten',       birthYear: 2008, height: 182, residence: 'Ølen',      hairColor: 'Brown', eyeColor: 'Blue',   gender: 'M', imageUrl: 'Morten.jpeg' },
-      { name: 'Thomas Andre', birthYear: 2008, height: 190, residence: 'Ølensvåg', hairColor: 'Brown', eyeColor: 'Brown',  gender: 'M', imageUrl: 'Thomas_Andre.jpg' },
-      { name: 'Eirik',        birthYear: 2008, height: 175, residence: 'Ølen',      hairColor: 'Blonde',eyeColor: 'Blue',   gender: 'M', imageUrl: 'Eirik.jpg' },
-      { name: 'Sasha',        birthYear: 2008, height: 182, residence: 'Haugesund', hairColor: 'Brown', eyeColor: 'Blue',   gender: 'M', imageUrl: 'Sasha.jpg' },
-      { name: 'Dan Evan',     birthYear: 2008, height: 0,   residence: 'Ølensvåg', hairColor: 'Black', eyeColor: 'Brown',  gender: 'M', imageUrl: 'Dan_Evan.jpg' },
-      { name: 'Endre',        birthYear: 2008, height: 0,   residence: 'Ølen',      hairColor: 'Blonde',eyeColor: 'Blue',   gender: 'M', imageUrl: 'Endre.jpg' },
-      { name: 'Gabri',        birthYear: 2007, height: 0,   residence: 'Ølen',  hairColor: 'Blonde', eyeColor: 'Blue',   gender: 'M', imageUrl: 'Gabri.jpg' },
-      { name: 'Ridwan',       birthYear: 2007, height: 194,   residence: 'Skjold',  hairColor: 'Black', eyeColor: 'Brown',   gender: 'M', imageUrl: 'Ridwan.jpg' },
+      { name:'Morten', birthYear:2008, height:182, residence:'Ølen', hairColor:'Brown', eyeColor:'Blue', gender:'M', imageUrl:'Morten.jpeg' },
+      { name:'Thomas Andre', birthYear:2008, height:190, residence:'Ølensvåg', hairColor:'Brown', eyeColor:'Brown', gender:'M', imageUrl:'Thomas_Andre.jpg' },
+      { name:'Eirik', birthYear:2008, height:175, residence:'Ølen', hairColor:'Blonde', eyeColor:'Blue', gender:'M', imageUrl:'Eirik.jpg' },
+      { name:'Sasha', birthYear:2008, height:182, residence:'Haugesund', hairColor:'Brown', eyeColor:'Blue', gender:'M', imageUrl:'Sasha.jpg' },
+      { name:'Dan Evan', birthYear:2008, height:0, residence:'Ølensvåg', hairColor:'Black', eyeColor:'Brown', gender:'M', imageUrl:'Dan_Evan.jpg' },
+      { name:'Endre', birthYear:2008, height:0, residence:'Ølen', hairColor:'Blonde', eyeColor:'Blue', gender:'M', imageUrl:'Endre.jpg' },
+      { name:'Gabri', birthYear:2007, height:0, residence:'Ølen', hairColor:'Blonde', eyeColor:'Blue', gender:'M', imageUrl:'Gabri.jpg' },
+      { name:'Ridwan', birthYear:2007, height:194, residence:'Skjold', hairColor:'Black', eyeColor:'Brown', gender:'M', imageUrl:'Ridwan.jpg' },
     ];
 
-    const MS_PER_DAY = 24 * 60 * 60 * 1000;
-    const secret = people[Math.floor(Date.now() / MS_PER_DAY) % people.length];
+    // Daily secret & reset check
+    function initDaily() {
+      const storedDate = localStorage.getItem(todayKey);
+      const nowDay = Math.floor(Date.now()/MS_PER_DAY);
+      if (parseInt(storedDate)!==nowDay) {
+        // new day → clear
+        localStorage.setItem(todayKey, nowDay);
+        localStorage.setItem(guessesKey, JSON.stringify([]));
+        localStorage.setItem(hintKey, '5');
+      }
+    }
+    initDaily();
+    const guesses = JSON.parse(localStorage.getItem(guessesKey));
+    let hintCount = parseInt(localStorage.getItem(hintKey));
+    const secret = people[nowDay % people.length] || people[0];
 
+    // DOM refs
     const input = document.getElementById('guessInput');
     const btn   = document.getElementById('guessBtn');
     const sugg  = document.getElementById('suggestions');
     const tbody = document.querySelector('#board tbody');
+    const hintBox = document.getElementById('hintBox');
+    const hintSpan = document.getElementById('hintCount');
+    const winOverlay = document.getElementById('winOverlay');
+    const winName = document.getElementById('winName');
+    const winPhoto = document.getElementById('winPhoto');
 
-    // Autocomplete suggestions
+    // Restore old guesses in table
+    guesses.forEach(name => processGuess(name,true));
+    updateHintBox();
+
+    // Autocomplete suggestions (filters out already guessed)
     input.addEventListener('input', () => {
       const val = input.value.trim().toLowerCase();
-      sugg.innerHTML = '';
-      if (!val) { sugg.style.display = 'none'; return; }
-      const matches = people.filter(p => p.name.toLowerCase().includes(val));
-      if (!matches.length) { sugg.style.display = 'none'; return; }
-      matches.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'suggestion';
-        div.innerHTML = `<img src="${p.imageUrl||placeholder}" alt=""><span>${p.name}</span>`;
-        div.addEventListener('click', () => {
-          input.value = p.name;
-          sugg.style.display = 'none';
-          input.focus();
+      sugg.innerHTML=''; if(!val){sugg.style.display='none';return;}
+      let matches = people.filter(p=>p.name.toLowerCase().includes(val) && !guesses.includes(p.name));
+      if(!matches.length){sugg.style.display='none';return;}
+      matches.forEach(p=>{
+        const div=document.createElement('div');
+        div.className='suggestion';
+        div.innerHTML=`<img src="${p.imageUrl||placeholder}" alt=""><span>${p.name}</span>`;
+        div.addEventListener('click',()=>{
+          input.value=p.name; sugg.style.display='none'; input.focus();
         });
         sugg.appendChild(div);
       });
-      sugg.style.display = 'block';
+      sugg.style.display='block';
     });
+    input.addEventListener('blur',()=>setTimeout(()=>sugg.style.display='none',100));
 
-    // Hide suggestions on blur (after click)
-    input.addEventListener('blur', () => setTimeout(() => sugg.style.display = 'none', 100));
+    // Process a guess (and optionally skip storing if restoring)
+    function processGuess(name, restoring=false) {
+      const guess = people.find(p=>p.name.toLowerCase()===name.toLowerCase());
+      if(!guess) {
+        if(name==='holytemuskibidi') { // magic reset
+          localStorage.removeItem(guessesKey);
+          localStorage.removeItem(hintKey);
+          localStorage.removeItem(todayKey);
+          location.reload();
+        }
+        return;
+      }
 
-    // Submit guess
+      // record
+      if(!restoring) {
+        guesses.unshift(guess.name);
+        localStorage.setItem(guessesKey, JSON.stringify(guesses));
+      }
+
+      // build row
+      const tr=document.createElement('tr');
+      const imgSrc=guess.imageUrl||placeholder;
+      tr.appendChild(cell(`<img class="person-photo" src="${imgSrc}" alt="">`,'gray'));
+      const numCell=(v,s)=>{
+        if(s===0) return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+        if(v===s) { return cell(v,'green'); }
+        const dir=v<s?'↑':'↓';
+        return cell(`${v} <span class="arrow">${dir}</span>`,'yellow');
+      };
+      const catCell=(v,s)=>{
+        if(s==='Unknown') return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+        if(v===s) return cell(v,'green');
+        return cell(v,'gray');
+      };
+      tr.appendChild(cell(guess.name,'gray'));
+      tr.appendChild(numCell(guess.birthYear,secret.birthYear));
+      tr.appendChild(numCell(guess.height,secret.height));
+      tr.appendChild(catCell(guess.residence,secret.residence));
+      tr.appendChild(catCell(guess.hairColor,secret.hairColor));
+      tr.appendChild(catCell(guess.gender,secret.gender));
+      tr.appendChild(catCell(guess.eyeColor,secret.eyeColor));
+
+      // insert newest on top
+      tbody.insertBefore(tr,tbody.firstChild);
+
+      // update hint
+      if(secret.residence!=='Unknown' && !restoring) {
+        hintCount = Math.max(hintCount-1,0);
+        localStorage.setItem(hintKey, hintCount);
+        updateHintBox();
+      }
+
+      // win?
+      if(guess.name===secret.name) showWinPopup(guess);
+
+    }
+
+    // Submit
     function submitGuess() {
-      const name = input.value.trim().toLowerCase();
-      const guess = people.find(p => p.name.toLowerCase() === name);
-      if (!guess) return; // ignore unknown
+      const name=input.value.trim();
+      if(!name) return;
+      processGuess(name,false);
+      input.value=''; input.focus();
+    }
+    btn.addEventListener('click',submitGuess);
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess();});
 
-      const tr = document.createElement('tr');
-
-      // Photo
-      const imgSrc = guess.imageUrl || placeholder;
-      tr.appendChild(cell(`<img class="person-photo" src="${imgSrc}" alt="">`, 'gray'));
-
-      // Helpers
-      const numCell = (v, s) => {
-        if (v === s) return cell(v, 'green');
-        if (v === 0) return cell(`Unknown <span class="arrow">↓</span>`, 'yellow');
-        const dir = v < s ? '↑' : '↓';
-        return cell(`${v} <span class="arrow">${dir}</span>`, 'yellow');
-      };
-      const catCell = (v, s) => {
-        if (v === s) return cell(v, 'green');
-        if (v === 'Unknown' || !v) return cell(`Unknown <span class="arrow">↓</span>`, 'yellow');
-        return cell(v, 'gray');
-      };
-
-      // Build row
-      tr.appendChild(cell(guess.name,                     'gray'));
-      tr.appendChild(numCell(guess.birthYear, secret.birthYear));
-      tr.appendChild(numCell(guess.height,    secret.height));
-      tr.appendChild(catCell(guess.residence,  secret.residence));
-      tr.appendChild(catCell(guess.hairColor,  secret.hairColor));
-      tr.appendChild(catCell(guess.gender,     secret.gender));
-      tr.appendChild(catCell(guess.eyeColor,   secret.eyeColor));
-
-      tbody.appendChild(tr);
-      input.value = '';
-      input.focus();
+    // Hint box
+    function updateHintBox(){
+      if(hintCount>0) {
+        hintBox.classList.remove('active');
+        hintBox.textContent=`Residence hint in ${hintCount} guesses`;
+      } else {
+        hintBox.classList.add('active');
+        hintBox.textContent='Show Hint';
+        hintBox.style.cursor='pointer';
+        hintBox.onclick=()=>{
+          alert('Residence: '+secret.residence);
+        };
+      }
     }
 
-    btn.addEventListener('click', submitGuess);
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') submitGuess();
-    });
-
-    function cell(html, cls) {
-      const td = document.createElement('td');
-      td.className = cls;
-      td.innerHTML = html;
-      return td;
+    // Win overlay
+    function showWinPopup(p){
+      winName.textContent=p.name;
+      winPhoto.src=p.imageUrl||placeholder;
+      winOverlay.classList.add('show');
     }
+
+    // helper
+    function cell(html,cls){
+      const td=document.createElement('td');
+      td.className=cls; td.innerHTML=html; return td;
+    }
+
   </script>
 </body>
 </html>
