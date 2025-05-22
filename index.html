@@ -11,7 +11,7 @@
       color: #fff;
       text-align: center;
       background:
-        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
         url('background.jpg') center/cover no-repeat;
       background-size: cover;
     }
@@ -33,34 +33,21 @@
       font-size: 0.9rem;
       color: #fff;
     }
-    #modeToggle.daily { right: 1rem; background: #9c27b0; } /* purple */
-    #modeToggle.free  { right: 1rem; background: #4caf50; } /* green */
+    #modeToggle.daily { right: 1rem; background: #9c27b0; }   /* purple */
+    #modeToggle.free  { right: 1rem; background: #4caf50; }   /* green */
     #resetFree {
       left: 1rem;
-      background: #ffeb3b; /* yellow */
+      background: #ffeb3b;
       color: #000;
       display: none;
     }
-    h1 {
-      margin: 0;
-      font-size: 3rem;
-    }
-    .mode {
-      display: block;
-      margin-top: 0.25rem;
-      font-size: 2.5rem;
-    }
-    .mode.daily { color: #4caf50; } /* green */
-    .mode.free  { color: #9c27b0; } /* purple */
-    .byline {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin: 0.5rem 0 1rem;
-    }
-    #winCounter {
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
+    h1 { margin: 0; font-size: 3rem; }
+    .mode { display: block; margin-top: 0.25rem; font-size: 2.5rem; }
+    .mode.daily { color: #4caf50; }   /* green */
+    .mode.free  { color: #9c27b0; }   /* purple */
+    .byline { font-size: 0.9rem; opacity: 0.8; margin: 0.5rem 0 1rem; }
+    #winCounter { margin-bottom: 1rem; font-size: 1rem; }
+
     .input-group {
       display: flex;
       width: 60%;
@@ -74,6 +61,8 @@
       border: none;
       border-radius: 4px 0 0 4px;
       box-sizing: border-box;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
     }
     #guessBtn {
       padding: 0 1rem;
@@ -81,6 +70,8 @@
       border: none;
       border-radius: 0 4px 4px 0;
       cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
     }
     #guessBtn:disabled {
       opacity: 0.5;
@@ -105,16 +96,12 @@
       padding: 0.25rem;
       cursor: pointer;
     }
-    .suggestion:hover {
-      background: #eee;
-    }
+    .suggestion:hover { background: #eee; }
     .suggestion img {
-      width: 40px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin-right: 0.5rem;
+      width: 40px; height: 40px; object-fit: cover;
+      border-radius: 50%; margin-right: 0.5rem;
     }
+
     #hintBox {
       width: 60%;
       margin: 1rem auto;
@@ -124,17 +111,10 @@
       border-radius: 4px;
       cursor: default;
     }
-    #hintBox.active {
-      background: #fff;
-      cursor: pointer;
-    }
-    #hintReveal {
-      margin-top: 0.5rem;
-    }
-    .table-wrapper {
-      overflow-x: auto;
-      margin-top: 1rem;
-    }
+    #hintBox.active { background: #fff; cursor: pointer; }
+    #hintReveal { margin-top: 0.5rem; }
+
+    .table-wrapper { overflow-x: auto; margin-top: 1rem; }
     table {
       width: 100%;
       min-width: 700px;
@@ -143,62 +123,40 @@
     }
     th, td {
       padding: 0.5rem;
-      color: #fff;
       white-space: nowrap;
       border: 1px solid rgba(255,255,255,0.3);
     }
     th {
       background: rgba(255,255,255,0.2);
+      color: #fff;
     }
-    .green {
-      background: rgba(136,232,140,0.7) !important;
-      color: #fff !important;
+    td {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
     }
-    .yellow {
-      background: rgba(254,240,138,0.7) !important;
-      color: #333 !important;
-    }
-    .gray {
-      background: rgba(221,221,221,0.7) !important;
-      color: #333 !important;
-    }
-    .winner-row td {
-      background: rgba(136,232,140,0.7) !important;
-      color: #fff !important;
-    }
+    .green  { background: rgba(136,232,140,0.7) !important; color: #fff !important; }
+    .yellow { background: rgba(254,240,138,0.7) !important; color: #333 !important; }
+    .wrong  { background: rgba(240,100,100,0.7) !important; color: #fff !important; }
+    .winner-row td { background: rgba(136,232,140,0.7) !important; color: #fff !important; }
     img.person-photo {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
+      width: 60px; height: 60px; object-fit: cover;
       border-radius: 50%;
+      background: rgba(255,255,255,0.2);
     }
+
     @media (max-width: 600px) {
-      .input-group, #hintBox {
-        width: 100%;
-      }
-      table {
-        min-width: 500px;
-      }
-      img.person-photo {
-        width: 50px;
-        height: 50px;
-      }
+      .input-group, #hintBox { width: 100%; }
+      table { min-width: 500px; }
+      img.person-photo { width: 50px; height: 50px; }
     }
+
     #winOverlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.5s;
     }
-    #winOverlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    #winOverlay.show { opacity: 1; pointer-events: auto; }
     #winContent {
       position: relative;
       background: rgba(50,50,50,0.95);
@@ -208,27 +166,15 @@
       max-width: 90%;
     }
     #winClose {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #fff;
+      position: absolute; top: 8px; right: 12px;
+      font-size: 1.5rem; cursor: pointer; color: #fff;
     }
     #winContent img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #fff;
+      width: 150px; height: 150px; border-radius: 50%;
+      object-fit: cover; border: 2px solid #fff;
     }
-    #winContent h2 {
-      margin: 1rem 0;
-    }
-    #winContent p {
-      margin-top: 0.5rem;
-      font-size: 1.2rem;
-    }
+    #winContent h2 { margin: 1rem 0; }
+    #winContent p  { margin-top: 0.5rem; font-size: 1.2rem; }
   </style>
 </head>
 <body>
@@ -265,7 +211,7 @@
   <div id="winOverlay">
     <div id="winContent">
       <div id="winClose">×</div>
-      <h2>Ølendle <span id="winMode"></span> Answer</h2>
+      <h2 id="winTitle"></h2>
       <h2><span id="winName"></span></h2>
       <img id="winPhoto" src="" alt="">
       <p>You got it in <span id="winCount"></span> guesses!</p>
@@ -295,7 +241,7 @@
           resetFree  = document.getElementById('resetFree'),
           modeLabel  = document.getElementById('modeLabel'),
           winTotal   = document.getElementById('winTotal'),
-          winMode    = document.getElementById('winMode'),
+          winTitle   = document.getElementById('winTitle'),
           guessInput = document.getElementById('guessInput'),
           guessBtn   = document.getElementById('guessBtn'),
           suggBox    = document.getElementById('suggestions'),
@@ -308,7 +254,7 @@
           winPhoto   = document.getElementById('winPhoto'),
           winCount   = document.getElementById('winCount');
 
-    let mode = 'daily', today, guesses, hintCount, won, total, secret;
+    let mode='daily', today, guesses, hintCount, won, total, secret;
 
     function osloNow() {
       return new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Oslo'}));
@@ -319,32 +265,33 @@
       modeToggle.className   = mode;
       modeLabel.textContent  = mode==='daily' ? 'Daily' : 'Freeplay';
       modeLabel.className    = 'mode ' + mode;
-      winMode.textContent    = modeLabel.textContent;
-      resetFree.style.display = mode==='free' ? 'block' : 'none';
+      hitTitle := mode==='daily' ? 'Daily Ølendle was...' : 'Ølendle was...'
+      winTitle.textContent   = hitTitle;
+      resetFree.style.display= mode==='free' ? 'block' : 'none';
     }
 
     function initState() {
-      const k = KEYS[mode];
+      const k   = KEYS[mode];
       const now = Math.floor(osloNow().getTime()/DAY_MS);
-      if (parseInt(localStorage.getItem(k.day),10) !== now) {
-        localStorage.setItem(k.day, now);
-        localStorage.setItem(k.g, '[]');
-        localStorage.setItem(k.h, '5');
+      if (parseInt(localStorage.getItem(k.day),10)!==now){
+        localStorage.setItem(k.day,now);
+        localStorage.setItem(k.g,'[]');
+        localStorage.setItem(k.h,'5');
         localStorage.removeItem(k.w);
       }
       today     = now;
-      guesses   = JSON.parse(localStorage.getItem(k.g)) || [];
-      hintCount = parseInt(localStorage.getItem(k.h),10) || 5;
-      won       = localStorage.getItem(k.w) === 'true';
-      total     = parseInt(localStorage.getItem(k.t),10) || 0;
-      secret = mode==='daily'
-        ? people[now % people.length]
-        : people[Math.floor(Math.random()*people.length)];
+      guesses   = JSON.parse(localStorage.getItem(k.g))||[];
+      hintCount = parseInt(localStorage.getItem(k.h),10)||5;
+      won       = false;  // always start fresh
+      total     = parseInt(localStorage.getItem(k.t),10)||0;
+      secret    = mode==='daily'
+                  ? people[now % people.length]
+                  : people[Math.floor(Math.random()*people.length)];
       winTotal.textContent = total;
-      // re-enable inputs
-      guessInput.disabled = false;
-      guessBtn.disabled   = false;
-      won = false; // ensure fresh play
+      guessInput.disabled  = false;
+      guessBtn.disabled    = false;
+      hintReveal.textContent = '';
+      hintBox.style.display  = 'block';
     }
 
     function saveState() {
@@ -352,12 +299,12 @@
       localStorage.setItem(k.g, JSON.stringify(guesses));
       localStorage.setItem(k.h, hintCount);
       localStorage.setItem(k.t, total);
-      if (won) localStorage.setItem(k.w, 'true');
+      if (won) localStorage.setItem(k.w,'true');
     }
 
     function compareNum(v,s) {
-      if (s===0) return `${v} ↓`;
-      if (v===s) return v;
+      if (s===0)  return `${v} ↓`;
+      if (v===s)  return v;
       return `${v} ${v<s?'↑':'↓'}`;
     }
     function compareCat(v,s) {
@@ -367,11 +314,18 @@
 
     function renderRows() {
       tbody.innerHTML = '';
-      guesses.forEach(name => {
-        const p = people.find(x => x.name === name);
+      guesses.forEach(name=>{
+        const p = people.find(x=>x.name===name);
         if (!p) return;
         const tr = document.createElement('tr');
-        if (p.name === secret.name) tr.classList.add('winner-row');
+        if (p.name===secret.name) tr.classList.add('winner-row');
+
+        function mkTD(text, cls='') {
+          const td = document.createElement('td');
+          td.textContent = text;
+          if (cls) td.classList.add(cls);
+          return td;
+        }
 
         // photo
         const tdImg = document.createElement('td');
@@ -379,46 +333,44 @@
         tr.appendChild(tdImg);
 
         // name
-        const tdName = document.createElement('td');
-        tdName.textContent = p.name;
-        if (p.name === secret.name) tdName.classList.add('green');
-        tr.appendChild(tdName);
+        tr.appendChild(mkTD(p.name, p.name===secret.name?'green':'' ));
 
         // birthYear
-        const tdBy = document.createElement('td');
-        tdBy.textContent = compareNum(p.birthYear,secret.birthYear);
-        tdBy.classList.add(p.birthYear===secret.birthYear ? 'green' : 'yellow');
-        tr.appendChild(tdBy);
+        tr.appendChild(mkTD(
+          compareNum(p.birthYear,secret.birthYear),
+          p.birthYear===secret.birthYear ? 'green' : 'wrong'
+        ));
 
         // height
-        const tdHt = document.createElement('td');
-        tdHt.textContent = compareNum(p.height,secret.height);
-        tdHt.classList.add(p.height===secret.height ? 'green' : 'yellow');
-        tr.appendChild(tdHt);
+        tr.appendChild(mkTD(
+          compareNum(p.height,secret.height),
+          p.height===secret.height ? 'green' : 'wrong'
+        ));
 
         // residence
-        const tdRes = document.createElement('td');
-        tdRes.textContent = compareCat(p.residence,secret.residence);
-        tdRes.classList.add(p.residence===secret.residence ? 'green' : (secret.residence==='Unknown'?'yellow':'gray'));
-        tr.appendChild(tdRes);
+        tr.appendChild(mkTD(
+          compareCat(p.residence,secret.residence),
+          p.residence===secret.residence ? 'green'
+            : (secret.residence==='Unknown'?'yellow':'wrong')
+        ));
 
         // hairColor
-        const tdHc = document.createElement('td');
-        tdHc.textContent = compareCat(p.hairColor,secret.hairColor);
-        tdHc.classList.add(p.hairColor===secret.hairColor ? 'green' : 'gray');
-        tr.appendChild(tdHc);
+        tr.appendChild(mkTD(
+          compareCat(p.hairColor,secret.hairColor),
+          p.hairColor===secret.hairColor ? 'green' : 'wrong'
+        ));
 
         // gender
-        const tdG = document.createElement('td');
-        tdG.textContent = compareCat(p.gender,secret.gender);
-        tdG.classList.add(p.gender===secret.gender ? 'green' : 'gray');
-        tr.appendChild(tdG);
+        tr.appendChild(mkTD(
+          compareCat(p.gender,secret.gender),
+          p.gender===secret.gender ? 'green': 'wrong'
+        ));
 
         // eyeColor
-        const tdEc = document.createElement('td');
-        tdEc.textContent = compareCat(p.eyeColor,secret.eyeColor);
-        tdEc.classList.add(p.eyeColor===secret.eyeColor ? 'green' : 'gray');
-        tr.appendChild(tdEc);
+        tr.appendChild(mkTD(
+          compareCat(p.eyeColor,secret.eyeColor),
+          p.eyeColor===secret.eyeColor ? 'green':'wrong'
+        ));
 
         tbody.appendChild(tr);
       });
@@ -431,8 +383,7 @@
       guesses.unshift(p.name);
       if (secret.residence!=='Unknown' && hintCount>0) hintCount--;
       if (p.name===secret.name) {
-        won = true;
-        total++;
+        won = true; total++;
       }
       saveState();
       renderRows();
@@ -444,36 +395,32 @@
       const v = guessInput.value.trim();
       if (!v) return;
       processGuess(v);
-      guessInput.value = '';
+      guessInput.value='';
       guessInput.focus();
     }
 
     guessBtn.addEventListener('click', submitGuess);
-    guessInput.addEventListener('keydown', e => { if (e.key==='Enter') submitGuess(); });
+    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
 
     // autocomplete
-    guessInput.addEventListener('input', ()=> {
+    guessInput.addEventListener('input', ()=>{
       const v = guessInput.value.trim().toLowerCase();
-      suggBox.innerHTML = '';
+      suggBox.innerHTML='';
       if (!v) { suggBox.style.display='none'; return; }
       const matches = people
         .filter(x=>x.name.toLowerCase().includes(v))
         .filter(x=>!guesses.includes(x.name));
       if (!matches.length) { suggBox.style.display='none'; return; }
-      matches.forEach(p => {
+      matches.forEach(p=>{
         const d = document.createElement('div');
-        d.className = 'suggestion';
+        d.className='suggestion';
         d.innerHTML = `<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
-        d.onclick = ()=> {
-          guessInput.value = p.name;
-          suggBox.style.display = 'none';
-          guessInput.focus();
-        };
+        d.onclick = ()=>{ guessInput.value=p.name; suggBox.style.display='none'; guessInput.focus(); };
         suggBox.appendChild(d);
       });
-      suggBox.style.display = 'block';
+      suggBox.style.display='block';
     });
-    guessInput.addEventListener('blur', ()=> setTimeout(()=> suggBox.style.display='none', 100));
+    guessInput.addEventListener('blur', ()=>setTimeout(()=>suggBox.style.display='none',100));
 
     // hint
     function updateHint() {
@@ -485,7 +432,7 @@
         hintBox.textContent = 'Show Hint';
       }
     }
-    hintBox.onclick = ()=> {
+    hintBox.onclick = ()=>{
       if (hintCount===0) {
         hintBox.style.display = 'none';
         hintReveal.textContent = 'Residence: ' + secret.residence;
@@ -495,12 +442,12 @@
     // win overlay
     function showWin(name,img,count) {
       winName.textContent = name;
-      winPhoto.src = img || 'no-image.png';
+      winPhoto.src = img||'no-image.png';
       winCount.textContent = count;
       winOverlay.classList.add('show');
       disableAfterWin();
     }
-    winClose.addEventListener('click', ()=> winOverlay.classList.remove('show'));
+    winClose.addEventListener('click', ()=>winOverlay.classList.remove('show'));
 
     function disableAfterWin() {
       guessInput.disabled = won;
@@ -508,8 +455,8 @@
     }
 
     // mode switching
-    modeToggle.addEventListener('click', ()=> {
-      mode = mode==='daily' ? 'free' : 'daily';
+    modeToggle.addEventListener('click', ()=>{
+      mode = mode==='daily'?'free':'daily';
       applyModeUI();
       initState();
       renderRows();
@@ -517,11 +464,11 @@
     });
 
     // freeplay reset
-    resetFree.addEventListener('click', ()=> {
+    resetFree.addEventListener('click', ()=>{
       if (mode==='free') {
         const k = KEYS.free;
-        localStorage.setItem(k.g, '[]');
-        localStorage.setItem(k.h, '5');
+        localStorage.setItem(k.g,'[]');
+        localStorage.setItem(k.h,'5');
         localStorage.removeItem(k.w);
         initState();
         renderRows();
