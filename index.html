@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Person-Guessle</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
+    .green { background: #88e88c; }
+    .yellow { background: #fef08a; }
+    .gray  { background: #ddd; color: #666; }
+    .arrow { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Person-Guessle</h1>
+  <p>Guess the mystery person!</p>
+  <input type="text" id="guessInput" placeholder="Type a name…" />
+  <button id="guessBtn">Guess</button>
+
+  <table id="board">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birth&nbsp;Year</th>
+        <th>Height&nbsp;(m)</th>
+        <th>Hair&nbsp;Color</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // 🔢 Your data
+    const people = [
+      {name: 'Alice', birthYear: 1990, height: 1.65, hairColor: 'Brown'},
+      {name: 'Bob',   birthYear: 1985, height: 1.80, hairColor: 'Blonde'},
+      {name: 'Carol', birthYear: 1992, height: 1.70, hairColor: 'Black'},
+      // …add more entries here
+    ];
+
+    // —— SNIPPET START: daily index logic ——
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+    const dayCount = Math.floor(Date.now() / MS_PER_DAY);
+    const index   = dayCount % people.length;
+    const secret  = people[index];
+    // —— SNIPPET END ——
+
+    const tbody = document.querySelector('#board tbody');
+    document.getElementById('guessBtn').onclick = () => {
+      const name = document.getElementById('guessInput').value.trim();
+      const guess = people.find(p => p.name.toLowerCase() === name.toLowerCase());
+      if (!guess) {
+        alert('Unknown name! Try one
