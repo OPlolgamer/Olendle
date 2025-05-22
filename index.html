@@ -10,16 +10,28 @@
     }
     body {
       font-family: sans-serif;
-      /* background layers */
       background-image:
         linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
         url('background.jpg');
       background-position: center;
       background-repeat: no-repeat;
-      background-size: cover;  /* cover entire screen */
+      background-size: cover;
       color: #fff;
       text-align: center;
     }
+    /* Desktop tweak: fit vertically */
+    @media (min-width: 800px) {
+      body {
+        background-size: auto 100%;
+      }
+    }
+    /* Mobile tweak: fit horizontally */
+    @media (max-width: 600px) {
+      body {
+        background-size: 100% auto;
+      }
+    }
+
     main {
       position: relative;
       max-width: 900px;
@@ -31,6 +43,7 @@
     h1 { font-size: 3rem; margin: 0; }
     .byline { font-size: 0.9rem; margin-bottom: 0.5rem; opacity: 0.8; }
     #winCounter { font-size: 1rem; margin-bottom: 1rem; }
+
     .autocomplete { position: relative; display: inline-block; width: 60%; }
     #guessInput {
       font-size: 1rem; padding: 0.5rem; width: 100%;
@@ -48,12 +61,14 @@
       width: 40px; height: 40px; object-fit: cover;
       border-radius: 50%; margin-right: 0.5rem;
     }
+
     button {
       font-size: 1rem; padding: 0.5rem 1rem; margin: 0.5rem;
       border: none; border-radius: 4px; cursor: pointer;
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+
     #hintBox {
       margin: 1rem auto; padding: 0.5rem 1rem;
       background: rgba(200,200,200,0.4); color: #000;
@@ -61,6 +76,7 @@
     }
     #hintBox.active { background: rgba(255,255,255,0.9); cursor: pointer; }
     #hintReveal { margin-top: 0.5rem; font-size: 1rem; }
+
     .table-wrapper {
       overflow-x: auto;
       margin-top: 1rem;
@@ -80,6 +96,16 @@
     .gray { background: rgba(221,221,221,0.7); color: #333; }
     .arrow { font-weight: bold; }
     img.person-photo { width: 60px; height: 60px; object-fit: cover; border-radius: 50%; }
+
+    @media (max-width: 600px) {
+      .autocomplete { width: 100%; }
+      #hintBox { width: 100%; }
+      .table-wrapper { margin-top: 0.5rem; }
+      table { min-width: 500px; }
+      img.person-photo { width: 50px; height: 50px; }
+      button { width: 100%; }
+    }
+
     #winOverlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.8);
@@ -104,15 +130,6 @@
     #winClose {
       position: absolute; top: 8px; right: 12px;
       font-size: 1.5rem; cursor: pointer; color: #fff;
-    }
-
-    @media (max-width:600px) {
-      .autocomplete { width: 100%; }
-      #hintBox { width: 100%; }
-      .table-wrapper { margin-top: 0.5rem; }
-      table { min-width: 500px; }
-      img.person-photo { width: 50px; height: 50px; }
-      button { width: 100%; }
     }
   </style>
 </head>
@@ -170,14 +187,13 @@
       { name:'Thomas Andre', birthYear:2008,height:190,residence:'Ølensvåg', hairColor:'Brown', eyeColor:'Brown', gender:'M',imageUrl:'Thomas_Andre.jpg' },
       { name:'Eirik',        birthYear:2008,height:176,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Eirik.jpg' },
       { name:'Sasha',        birthYear:2008,height:182,residence:'Haugesund', hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Sasha.jpg' },
-      { name:'Dan Evan',     birthYear:2008,height:0,  residence:'Ølensvåg', hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Dan_Evan.jpg' },
-      { name:'Endre',        birthYear:2008,height:0,  residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Endre.jpg' },
+      { name:'Dan Evan',     birthYear:2008,height:180,residence:'Ølensvåg', hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Dan_Evan.jpg' },
+      { name:'Endre',        birthYear:2008,height:182,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Endre.jpg' },
       { name:'Gabri',        birthYear:2007,height:182,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Gabri.jpg' },
       { name:'Ridwan',       birthYear:2007,height:194,residence:'Skjold',    hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Ridwan.jpg' },
       { name:'Sina',         birthYear:2007,height:175,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'F',imageUrl:'Sina.jpg' }
     ];
 
-    // daily reset & load state
     function init() {
       const now = Math.floor(Date.now()/DAY_MS);
       if (parseInt(localStorage.getItem(keys.day),10)!==now) {
@@ -238,7 +254,7 @@
       const g = people.find(p=>p.name.toLowerCase()===name.toLowerCase());
       if(!g){
         if(!restoring && name==='holytemuskibidi'){
-          localStorage.clear(); location.reload();
+          localStorage.clear();location.reload();
         }
         return;
       }
@@ -316,7 +332,7 @@
       winOverlay.classList.add('show');
       input.disabled=true; btn.disabled=true;
     }
-    winClose.onclick=()=>{ winOverlay.classList.remove('show'); };
+    winClose.onclick=()=>{ winOverlay.classList.remove('show'); input.disabled=false; btn.disabled=false; };
 
     function cell(html,cls){
       const td=document.createElement('td');
