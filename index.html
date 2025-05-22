@@ -4,32 +4,24 @@
   <meta charset="UTF-8" />
   <title>Ølendle</title>
   <style>
-    /* Full-page background with dark overlay */
     body {
       margin: 0;
       font-family: sans-serif;
-      background: 
+      background:
         linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
         url('background.jpg') center/cover no-repeat;
       color: #fff;
       text-align: center;
     }
     main {
-      max-width: 800px;
+      max-width: 900px;
       margin: 2rem auto;
       background: rgba(255,255,255,0.1);
       padding: 1rem;
       border-radius: 8px;
     }
-    h1 {
-      font-size: 3rem;
-      margin: 0;
-    }
-    .byline {
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-      opacity: 0.8;
-    }
+    h1 { font-size: 3rem; margin: 0; }
+    .byline { font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8; }
     input, button {
       font-size: 1rem;
       padding: 0.5rem;
@@ -37,12 +29,8 @@
       border: none;
       border-radius: 4px;
     }
-    button {
-      cursor: pointer;
-    }
-    button:hover {
-      background: rgba(255,255,255,0.2);
-    }
+    button { cursor: pointer; }
+    button:hover { background: rgba(255,255,255,0.2); }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -54,11 +42,9 @@
       padding: 0.5rem;
       color: #fff;
     }
-    th {
-      background: rgba(255,255,255,0.2);
-    }
+    th { background: rgba(255,255,255,0.2); }
     .green { background: rgba(136,232,140,0.7); }
-    .yellow { background: rgba(254,240,138,0.7); }
+    .yellow { background: rgba(254,240,138,0.7); color: #333; }
     .gray  { background: rgba(221,221,221,0.7); color: #333; }
     .arrow { font-weight: bold; }
     img.person-photo {
@@ -83,7 +69,7 @@
           <th>Photo</th>
           <th>Name</th>
           <th>Birth&nbsp;Year</th>
-          <th>Height&nbsp;(m)</th>
+          <th>Height&nbsp;(cm)</th>
           <th>Residence</th>
           <th>Hair&nbsp;Color</th>
           <th>Gender</th>
@@ -95,88 +81,74 @@
   </main>
 
   <script>
-    // Person roster; add `imageUrl` if you have a photo, else omit or set to null
     const people = [
-      { name: 'Morten', birthYear: 2008, height: 182, residence: 'Ølen', hairColor: 'Brown', gender: 'M', eyeColor: 'Blue', imageUrl: 'Morten.jpeg' },
-      { name: 'Thomas Andre', birthYear: 2008, height: 190, residence: 'Ølensvåg', hairColor: 'Brown', gender: 'M', eyeColor: 'Brown', imageUrl: 'Thomas_Andre.jpg' },
-      // …add more here
+      { name: 'Morten',       birthYear: 2008, height: 182, residence: 'Ølen',      hairColor: 'Brown', eyeColor: 'Blue',  gender: 'M', imageUrl: 'Morten.jpeg' },
+      { name: 'Thomas Andre', birthYear: 2008, height: 190, residence: 'Ølensvåg', hairColor: 'Brown', eyeColor: 'Brown', gender: 'M', imageUrl: 'Thomas_Andre.jpg' },
+      { name: 'Eirik',        birthYear: 2008, height: 175, residence: 'Ølen',      hairColor: 'Blonde',eyeColor: 'Blue',  gender: 'M' },
+      { name: 'Sasha',        birthYear: 2008, height: 182, residence: 'Haugesund', hairColor: 'Brown',eyeColor: 'Blue',  gender: 'M' },
+      { name: 'Dan Evan',     birthYear: 2008, height: 0,   residence: 'Ølensvåg', hairColor: 'Black',eyeColor: 'Brown', gender: 'M' },
+      { name: 'Endre',        birthYear: 2008, height: 0,   residence: 'Ølen',      hairColor: 'Blonde',eyeColor: 'Blue',  gender: 'M' },
+      { name: 'Gabri',        birthYear: 2007, height: 0,   residence: 'Unknown',  hairColor: 'Blonde',eyeColor: 'Blue',  gender: 'M' },
+      // …keep adding more as needed
     ];
 
-    // Placeholder image if none provided
     const placeholder = 'no-image.png';
 
-    // Daily secret logic
-    const MS_PER_DAY = 24 * 60 * 60 * 1000;
-    const dayCount = Math.floor(Date.now() / MS_PER_DAY);
-    const secretIndex = dayCount % people.length;
-    const secret = people[secretIndex];
+    // daily secret
+    const MS_PER_DAY = 24*60*60*1000;
+    const idx = Math.floor(Date.now()/MS_PER_DAY) % people.length;
+    const secret = people[idx];
 
     const tbody = document.querySelector('#board tbody');
-    const guessInput = document.getElementById('guessInput');
-    const guessBtn   = document.getElementById('guessBtn');
+    const input = document.getElementById('guessInput');
+    const btn   = document.getElementById('guessBtn');
 
-    guessBtn.addEventListener('click', () => {
-      const name = guessInput.value.trim();
-      const guess = people.find(p => p.name.toLowerCase() === name.toLowerCase());
-      if (!guess) {
-        alert('Unknown name! Use one exactly from your list.');
-        return;
-      }
+    btn.addEventListener('click', () => {
+      const name = input.value.trim().toLowerCase();
+      const guess = people.find(p => p.name.toLowerCase() === name);
+      if (!guess) return alert('Unknown name! Use one exactly from your list.');
 
       const tr = document.createElement('tr');
 
-      // Photo cell
-      const imgSrc = guess.imageUrl ? guess.imageUrl : placeholder;
+      // photo
+      const img = guess.imageUrl || placeholder;
       const imgCell = document.createElement('td');
-      imgCell.innerHTML = `<img class="person-photo" src="${imgSrc}" alt="${guess.name}">`;
+      imgCell.innerHTML = `<img class="person-photo" src="${img}" alt="${guess.name}">`;
       tr.appendChild(imgCell);
 
-      // Name
+      // helpers
+      function numCell(val, secretVal) {
+        if (val === secretVal) return makeCell(val, 'green');
+        if (val === 0 || val === 'Unknown') {
+          return makeCell(`Unknown <span class="arrow">↓</span>`, 'yellow');
+        }
+        const dir = val < secretVal ? '↑' : '↓';
+        return makeCell(`${val} <span class="arrow">${dir}</span>`, 'yellow');
+      }
+      function catCell(val, secretVal) {
+        if (val === secretVal) return makeCell(val, 'green');
+        if (val === 'Unknown') return makeCell(`Unknown <span class="arrow">↓</span>`, 'yellow');
+        return makeCell(val, 'gray');
+      }
+
+      // name
       tr.appendChild(makeCell(guess.name, 'gray'));
-
-      // Birth Year
-      if (guess.birthYear === secret.birthYear) {
-        tr.appendChild(makeCell(guess.birthYear, 'green'));
-      } else {
-        const dir = guess.birthYear < secret.birthYear ? '↑' : '↓';
-        tr.appendChild(makeCell(`${guess.birthYear} <span class="arrow">${dir}</span>`, 'yellow'));
-      }
-
-      // Height
-      if (guess.height === secret.height) {
-        tr.appendChild(makeCell(guess.height.toFixed(2), 'green'));
-      } else {
-        const dir = guess.height < secret.height ? '↑' : '↓';
-        tr.appendChild(makeCell(`${guess.height.toFixed(2)} <span class="arrow">${dir}</span>`, 'yellow'));
-      }
-
-      // Residence (categorical)
-      tr.appendChild( guess.residence.toLowerCase() === secret.residence.toLowerCase()
-        ? makeCell(guess.residence, 'green')
-        : makeCell(guess.residence, 'gray')
-      );
-
-      // Hair Color
-      tr.appendChild( guess.hairColor.toLowerCase() === secret.hairColor.toLowerCase()
-        ? makeCell(guess.hairColor, 'green')
-        : makeCell(guess.hairColor, 'gray')
-      );
-
-      // Gender
-      tr.appendChild( guess.gender.toLowerCase() === secret.gender.toLowerCase()
-        ? makeCell(guess.gender, 'green')
-        : makeCell(guess.gender, 'gray')
-      );
-
-      // Eye Color
-      tr.appendChild( guess.eyeColor.toLowerCase() === secret.eyeColor.toLowerCase()
-        ? makeCell(guess.eyeColor, 'green')
-        : makeCell(guess.eyeColor, 'gray')
-      );
+      // birthYear
+      tr.appendChild(numCell(guess.birthYear, secret.birthYear));
+      // height
+      tr.appendChild(numCell(guess.height, secret.height));
+      // residence
+      tr.appendChild(catCell(guess.residence, secret.residence));
+      // hairColor
+      tr.appendChild(catCell(guess.hairColor, secret.hairColor));
+      // gender
+      tr.appendChild(catCell(guess.gender, secret.gender));
+      // eyeColor
+      tr.appendChild(catCell(guess.eyeColor, secret.eyeColor));
 
       tbody.appendChild(tr);
-      guessInput.value = '';
-      guessInput.focus();
+      input.value = '';
+      input.focus();
     });
 
     function makeCell(html, cls) {
