@@ -4,109 +4,115 @@
   <meta charset="UTF-8" />
   <title>Ølendle</title>
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
     body {
-      margin:0;
-      font-family:sans-serif;
-      background:
-        linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
-        url('background.jpg') center center/cover no-repeat;
-      color:#fff;
-      text-align:center;
+      font-family: sans-serif;
+      /* background layers */
+      background-image:
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url('background.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;  /* cover entire screen */
+      color: #fff;
+      text-align: center;
     }
     main {
-      position:relative;
-      max-width:900px;
-      margin:2rem auto;
-      background:rgba(255,255,255,0.1);
-      padding:1rem;
-      border-radius:8px;
+      position: relative;
+      max-width: 900px;
+      margin: 2rem auto;
+      background: rgba(255,255,255,0.1);
+      padding: 1rem;
+      border-radius: 8px;
     }
-    h1 { font-size:3rem; margin:0; }
-    .byline { font-size:0.9rem; margin-bottom:0.5rem; opacity:0.8; }
-    #winCounter { font-size:1rem; margin-bottom:1rem; }
-    .autocomplete { position:relative; display:inline-block; width:60%; }
+    h1 { font-size: 3rem; margin: 0; }
+    .byline { font-size: 0.9rem; margin-bottom: 0.5rem; opacity: 0.8; }
+    #winCounter { font-size: 1rem; margin-bottom: 1rem; }
+    .autocomplete { position: relative; display: inline-block; width: 60%; }
     #guessInput {
-      font-size:1rem; padding:0.5rem; width:100%;
-      border:none; border-radius:4px; box-sizing:border-box;
+      font-size: 1rem; padding: 0.5rem; width: 100%;
+      border: none; border-radius: 4px; box-sizing: border-box;
     }
     #suggestions {
-      position:absolute; top:100%; left:0; width:100%;
-      max-height:200px; overflow-y:auto;
-      background:rgba(255,255,255,0.9); color:#000;
-      border-radius:4px; display:none; z-index:10;
+      position: absolute; top: 100%; left: 0; width: 100%;
+      max-height: 200px; overflow-y: auto;
+      background: rgba(255,255,255,0.9); color: #000;
+      border-radius: 4px; display: none; z-index: 10;
     }
-    .suggestion { display:flex; align-items:center; padding:0.25rem; cursor:pointer; }
-    .suggestion:hover { background:#eee; }
+    .suggestion { display: flex; align-items: center; padding: 0.25rem; cursor: pointer; }
+    .suggestion:hover { background: #eee; }
     .suggestion img {
-      width:40px; height:40px; object-fit:cover;
-      border-radius:50%; margin-right:0.5rem;
+      width: 40px; height: 40px; object-fit: cover;
+      border-radius: 50%; margin-right: 0.5rem;
     }
     button {
-      font-size:1rem; padding:0.5rem 1rem; margin:0.5rem;
-      border:none; border-radius:4px; cursor:pointer;
+      font-size: 1rem; padding: 0.5rem 1rem; margin: 0.5rem;
+      border: none; border-radius: 4px; cursor: pointer;
     }
-    button:hover { background:rgba(255,255,255,0.2); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
     #hintBox {
-      margin:1rem auto; padding:0.5rem 1rem;
-      background:rgba(200,200,200,0.4); color:#000;
-      border-radius:4px; width:60%; cursor:default;
+      margin: 1rem auto; padding: 0.5rem 1rem;
+      background: rgba(200,200,200,0.4); color: #000;
+      border-radius: 4px; width: 60%; cursor: default;
     }
-    #hintBox.active { background:rgba(255,255,255,0.9); cursor:pointer; }
-    #hintReveal { margin-top:0.5rem; font-size:1rem; }
-
-    /* Table wrapper for horizontal scroll on mobile */
+    #hintBox.active { background: rgba(255,255,255,0.9); cursor: pointer; }
+    #hintReveal { margin-top: 0.5rem; font-size: 1rem; }
     .table-wrapper {
-      overflow-x:auto;
-      margin-top:1rem;
+      overflow-x: auto;
+      margin-top: 1rem;
     }
     table {
-      width:100%; border-collapse:collapse;
-      background:rgba(255,255,255,0.1);
-      min-width:700px; /* ensure scroll */
+      width: 100%; border-collapse: collapse;
+      background: rgba(255,255,255,0.1);
+      min-width: 700px;
     }
-    th,td {
-      border:1px solid rgba(255,255,255,0.3);
-      padding:0.5rem; color:#fff; vertical-align:middle;
-      white-space:nowrap;
+    th, td {
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.5rem; color: #fff; white-space: nowrap;
     }
-    th { background:rgba(255,255,255,0.2); }
-    .green { background:rgba(136,232,140,0.7); }
-    .yellow { background:rgba(254,240,138,0.7); color:#333; }
-    .gray { background:rgba(221,221,221,0.7); color:#333; }
-    .arrow { font-weight:bold; }
-    img.person-photo { width:60px; height:60px; object-fit:cover; border-radius:50%; }
+    th { background: rgba(255,255,255,0.2); }
+    .green { background: rgba(136,232,140,0.7); }
+    .yellow { background: rgba(254,240,138,0.7); color: #333; }
+    .gray { background: rgba(221,221,221,0.7); color: #333; }
+    .arrow { font-weight: bold; }
+    img.person-photo { width: 60px; height: 60px; object-fit: cover; border-radius: 50%; }
     #winOverlay {
-      position:fixed; top:0; left:0; right:0; bottom:0;
-      background:rgba(0,0,0,0.8);
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity 0.5s;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.5s;
     }
-    #winOverlay.show { opacity:1; pointer-events:auto; }
+    #winOverlay.show {
+      opacity: 1; pointer-events: auto;
+    }
     #winContent {
-      position:relative;
-      background:rgba(50,50,50,0.95); color:#fff;
-      padding:2rem; border-radius:8px; text-align:center;
-      max-width:90%;
+      position: relative;
+      background: rgba(50,50,50,0.95); color: #fff;
+      padding: 2rem; border-radius: 8px; text-align: center;
+      max-width: 90%;
     }
     #winContent img {
-      width:150px; height:150px; border-radius:50%; object-fit:cover;
-      border:2px solid #fff;
+      width: 150px; height: 150px; border-radius: 50%; object-fit: cover;
+      border: 2px solid #fff;
     }
-    #winContent h2 { margin:1rem 0; }
-    #winContent p { margin-top:0.5rem; font-size:1.2rem; }
+    #winContent h2 { margin: 1rem 0; }
+    #winContent p { margin-top: 0.5rem; font-size: 1.2rem; }
     #winClose {
-      position:absolute; top:8px; right:12px;
-      font-size:1.5rem; cursor:pointer; color:#fff;
+      position: absolute; top: 8px; right: 12px;
+      font-size: 1.5rem; cursor: pointer; color: #fff;
     }
 
-    /* Mobile tweaks */
     @media (max-width:600px) {
-      .autocomplete { width:100%; }
-      #hintBox { width:100%; }
-      .table-wrapper { margin-top:0.5rem; }
-      table { min-width:500px; }
-      img.person-photo { width:50px; height:50px; }
-      button { width:100%; }
+      .autocomplete { width: 100%; }
+      #hintBox { width: 100%; }
+      .table-wrapper { margin-top: 0.5rem; }
+      table { min-width: 500px; }
+      img.person-photo { width: 50px; height: 50px; }
+      button { width: 100%; }
     }
   </style>
 </head>
@@ -120,7 +126,7 @@
     <div id="hintReveal"></div>
 
     <div class="autocomplete">
-      <input type="text" id="guessInput" placeholder="Type a name…" autocomplete="off" />
+      <input id="guessInput" placeholder="Type a name…" autocomplete="off" />
       <div id="suggestions"></div>
     </div>
     <button id="guessBtn">Guess</button>
@@ -129,7 +135,6 @@
       <table id="board">
         <thead>
           <tr>
-            <!-- removed Photo header, still reserves column -->
             <th></th><th>Name</th><th>Birth Year</th>
             <th>Height (cm)</th><th>Residence</th>
             <th>Hair Color</th><th>Gender</th><th>Eye Color</th>
@@ -151,12 +156,14 @@
 
   <script>
     const placeholder = 'no-image.png';
-    const MS_PER_DAY  = 24*60*60*1000;
-    const todayKey    = 'olendle-date';
-    const guessesKey  = 'olendle-guesses';
-    const hintKey     = 'olendle-hint';
-    const wonKey      = 'olendle-won';
-    const totalKey    = 'olendle-totalWins';
+    const DAY_MS     = 24*60*60*1000;
+    const keys = {
+      day: 'olendle-date',
+      guesses: 'olendle-guesses',
+      hint: 'olendle-hint',
+      won: 'olendle-won',
+      total: 'olendle-totalWins'
+    };
 
     const people = [
       { name:'Morten',       birthYear:2008,height:182,residence:'Ølen',      hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Morten.jpeg' },
@@ -170,24 +177,25 @@
       { name:'Sina',         birthYear:2007,height:175,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'F',imageUrl:'Sina.jpg' }
     ];
 
-    function initDaily() {
-      const now = Math.floor(Date.now()/MS_PER_DAY);
-      const stored = parseInt(localStorage.getItem(todayKey),10);
-      if (stored !== now) {
-        localStorage.setItem(todayKey, now);
-        localStorage.setItem(guessesKey, JSON.stringify([]));
-        localStorage.setItem(hintKey, '5');
-        localStorage.removeItem(wonKey);
+    // daily reset & load state
+    function init() {
+      const now = Math.floor(Date.now()/DAY_MS);
+      if (parseInt(localStorage.getItem(keys.day),10)!==now) {
+        localStorage.setItem(keys.day, now);
+        localStorage.setItem(keys.guesses, JSON.stringify([]));
+        localStorage.setItem(keys.hint, '5');
+        localStorage.removeItem(keys.won);
       }
       return now;
     }
-    const today    = initDaily();
-    let guesses    = JSON.parse(localStorage.getItem(guessesKey)) || [];
-    let hintCount  = parseInt(localStorage.getItem(hintKey),10) || 5;
-    let wonToday   = localStorage.getItem(wonKey) === 'true';
-    let totalWins  = parseInt(localStorage.getItem(totalKey),10) || 0;
+    const today    = init();
+    let guesses    = JSON.parse(localStorage.getItem(keys.guesses)) || [];
+    let hintCount  = parseInt(localStorage.getItem(keys.hint),10) || 5;
+    let wonToday   = localStorage.getItem(keys.won)==='true';
+    let totalWins  = parseInt(localStorage.getItem(keys.total),10) || 0;
     const secret   = people[today % people.length];
 
+    // refs
     const input      = document.getElementById('guessInput');
     const btn        = document.getElementById('guessBtn');
     const sugg       = document.getElementById('suggestions');
@@ -195,7 +203,6 @@
     const hintBox    = document.getElementById('hintBox');
     const hintReveal = document.getElementById('hintReveal');
     const winOverlay = document.getElementById('winOverlay');
-    const winContent = document.getElementById('winContent');
     const winClose   = document.getElementById('winClose');
     const winName    = document.getElementById('winName');
     const winPhoto   = document.getElementById('winPhoto');
@@ -203,127 +210,113 @@
     const winTotal   = document.getElementById('winTotal');
 
     winTotal.textContent = totalWins;
+    // restore
+    guesses.forEach(n=>processGuess(n,true));
+    updateHint();
 
-    // Restore
-    guesses.forEach(name=>processGuess(name,true));
-    updateHintBox();
-
-    // Auto-show win on reload
     if (wonToday) showWin(secret.name, secret.imageUrl, guesses.length);
 
-    // Autocomplete
+    // autocomplete
     input.addEventListener('input',()=>{
-      const val = input.value.trim().toLowerCase();
-      sugg.innerHTML='';
-      if(!val){sugg.style.display='none';return;}
-      const matches = people.filter(p=>
-        p.name.toLowerCase().includes(val)&&!guesses.includes(p.name));
-      if(!matches.length){sugg.style.display='none';return;}
-      matches.forEach(p=>{
-        const div=document.createElement('div');
-        div.className='suggestion';
-        div.innerHTML=`<img src="${p.imageUrl||placeholder}"><span>${p.name}</span>`;
-        div.onclick=()=>{input.value=p.name;sugg.style.display='none';input.focus();};
-        sugg.appendChild(div);
+      const v = input.value.trim().toLowerCase();
+      sugg.innerHTML=''; if(!v){sugg.style.display='none';return;}
+      const m = people.filter(p=>
+        p.name.toLowerCase().includes(v) && !guesses.includes(p.name)
+      );
+      if(!m.length){sugg.style.display='none';return;}
+      m.forEach(p=>{
+        const d = document.createElement('div'); d.className='suggestion';
+        d.innerHTML=`<img src="${p.imageUrl||placeholder}"><span>${p.name}</span>`;
+        d.onclick=()=>{ input.value=p.name; sugg.style.display='none'; input.focus(); };
+        sugg.appendChild(d);
       });
       sugg.style.display='block';
     });
     input.addEventListener('blur',()=>setTimeout(()=>sugg.style.display='none',100));
 
-    // Process guess
     function processGuess(name,restoring=false){
-      const guess=people.find(p=>p.name.toLowerCase()===name.toLowerCase());
-      if(!guess){
-        if(!restoring&&name==='holytemuskibidi'){
-          localStorage.clear();location.reload();
+      const g = people.find(p=>p.name.toLowerCase()===name.toLowerCase());
+      if(!g){
+        if(!restoring && name==='holytemuskibidi'){
+          localStorage.clear(); location.reload();
         }
         return;
       }
-      if(guesses.includes(guess.name))return;
+      if(guesses.includes(g.name)) return;
 
       if(!restoring){
-        guesses.unshift(guess.name);
-        localStorage.setItem(guessesKey, JSON.stringify(guesses));
+        guesses.unshift(g.name);
+        localStorage.setItem(keys.guesses, JSON.stringify(guesses));
       }
 
       const tr=document.createElement('tr');
-      tr.appendChild(cell(`<img class="person-photo" src="${guess.imageUrl||placeholder}">`,'gray'));
+      tr.appendChild(cell(`<img class="person-photo" src="${g.imageUrl||placeholder}">`,'gray'));
 
-      const numCell=(v,s)=>{
-        if(s===0) return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+      const numC=(v,s)=>{
+        if(s===0) return cell(`${v} ↓`,'yellow');
         if(v===s) return cell(v,'green');
-        const dir=v<s?'↑':'↓'; return cell(`${v} <span class="arrow">${dir}</span>`,'yellow');
+        return cell(`${v} ${v<s?'↑':'↓'}`,'yellow');
       };
-      const catCell=(v,s)=>{
-        if(s==='Unknown') return cell(`${v} <span class="arrow">↓</span>`,'yellow');
-        if(v===s)        return cell(v,'green');
+      const catC=(v,s)=>{
+        if(s==='Unknown') return cell(`${v} ↓`,'yellow');
+        if(v===s) return cell(v,'green');
         return cell(v,'gray');
       };
 
-      tr.appendChild(cell(guess.name,'gray'));
-      tr.appendChild(numCell(guess.birthYear,secret.birthYear));
-      tr.appendChild(numCell(guess.height,     secret.height));
-      tr.appendChild(catCell(guess.residence,  secret.residence));
-      tr.appendChild(catCell(guess.hairColor,  secret.hairColor));
-      tr.appendChild(catCell(guess.gender,     secret.gender));
-      tr.appendChild(catCell(guess.eyeColor,   secret.eyeColor));
+      tr.appendChild(cell(g.name,'gray'));
+      tr.appendChild(numC(g.birthYear,secret.birthYear));
+      tr.appendChild(numC(g.height,     secret.height));
+      tr.appendChild(catC(g.residence,  secret.residence));
+      tr.appendChild(catC(g.hairColor,  secret.hairColor));
+      tr.appendChild(catC(g.gender,     secret.gender));
+      tr.appendChild(catC(g.eyeColor,   secret.eyeColor));
 
       tbody.insertBefore(tr,tbody.firstChild);
 
-      if(!restoring&&secret.residence!=='Unknown'&&hintCount>0){
-        hintCount--;
-        localStorage.setItem(hintKey,hintCount);
-        updateHintBox();
+      if(!restoring && secret.residence!=='Unknown' && hintCount>0){
+        hintCount--; localStorage.setItem(keys.hint,hintCount);
+        updateHint();
       }
 
-      if(guess.name===secret.name&&!wonToday){
-        wonToday=true;
-        localStorage.setItem(wonKey,'true');
-        totalWins++;
-        localStorage.setItem(totalKey,totalWins);
+      if(g.name===secret.name && !wonToday){
+        wonToday=true; localStorage.setItem(keys.won,'true');
+        totalWins++; localStorage.setItem(keys.total,totalWins);
         winTotal.textContent=totalWins;
-        showWin(guess.name,guess.imageUrl,guesses.length);
+        showWin(g.name,g.imageUrl,guesses.length);
       }
     }
 
     function submitGuess(){
-      const name=input.value.trim();
-      if(!name)return;
-      processGuess(name,false);
+      const n=input.value.trim();
+      if(!n) return;
+      processGuess(n,false);
       input.value=''; input.focus();
     }
     btn.onclick=submitGuess;
-    input.addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess();});
+    input.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
 
-    // Hint box
-    hintBox.addEventListener('click',()=>{
-      if(hintCount===0){
-        hintBox.style.display='none';
-        hintReveal.textContent='Residence: '+secret.residence;
-      }
-    });
-    function updateHintBox(){
+    function updateHint(){
       if(hintCount>0){
         hintBox.classList.remove('active');
-        hintBox.innerHTML=`Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
+        hintBox.innerHTML=`Residence hint in ${hintCount} guesses`;
       } else {
         hintBox.classList.add('active');
         hintBox.textContent='Show Hint';
       }
     }
-
-    // Win popup
-    function showWin(name,img,count){
-      winName.textContent=name;
-      winPhoto.src=img||placeholder;
-      winCount.textContent=count;
-      winOverlay.classList.add('show');
-      input.disabled = true;
-      btn.disabled   = true;
-    }
-    winClose.onclick = ()=>{
-      winOverlay.classList.remove('show');
+    hintBox.onclick=()=>{
+      if(hintCount===0){
+        hintBox.style.display='none';
+        hintReveal.textContent='Residence: '+secret.residence;
+      }
     };
+
+    function showWin(n,img,c){
+      winName.textContent=n; winPhoto.src=img||placeholder; winCount.textContent=c;
+      winOverlay.classList.add('show');
+      input.disabled=true; btn.disabled=true;
+    }
+    winClose.onclick=()=>{ winOverlay.classList.remove('show'); };
 
     function cell(html,cls){
       const td=document.createElement('td');
