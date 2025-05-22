@@ -4,111 +4,78 @@
   <meta charset="UTF-8" />
   <title>Ølendle</title>
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
+    body { margin:0; font-family:sans-serif;
       background:
-        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
         url('background.jpg') center/cover no-repeat;
-      color: #fff;
-      text-align: center;
+      color:#fff; text-align:center;
     }
     main {
-      position: relative;
-      max-width: 900px;
-      margin: 2rem auto;
-      background: rgba(255,255,255,0.1);
-      padding: 1rem;
-      border-radius: 8px;
+      position:relative;
+      max-width:900px;
+      margin:2rem auto;
+      background:rgba(255,255,255,0.1);
+      padding:1rem;
+      border-radius:8px;
     }
-    h1 { font-size: 3rem; margin: 0; }
-    .byline { font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8; }
-    .autocomplete { position: relative; display: inline-block; width: 60%; }
+    h1 { font-size:3rem; margin:0; }
+    .byline { font-size:0.9rem; margin-bottom:1.5rem; opacity:0.8; }
+    .autocomplete { position:relative; display:inline-block; width:60%; }
     #guessInput {
-      font-size: 1rem;
-      padding: 0.5rem;
-      width: 100%;
-      border: none;
-      border-radius: 4px;
-      box-sizing: border-box;
+      font-size:1rem; padding:0.5rem; width:100%;
+      border:none; border-radius:4px; box-sizing:border-box;
     }
     #suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      background: rgba(255,255,255,0.9);
-      color: #000;
-      border-radius: 4px;
-      display: none;
-      z-index: 10;
-      box-sizing: border-box;
+      position:absolute; top:100%; left:0; width:100%;
+      max-height:200px; overflow-y:auto;
+      background:rgba(255,255,255,0.9); color:#000;
+      border-radius:4px; display:none; z-index:10;
+      box-sizing:border-box;
     }
     .suggestion {
-      display: flex;
-      align-items: center;
-      padding: 0.25rem;
-      cursor: pointer;
+      display:flex; align-items:center; padding:0.25rem;
+      cursor:pointer;
     }
-    .suggestion:hover { background: #eee; }
+    .suggestion:hover { background:#eee; }
     .suggestion img {
-      width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 0.5rem;
+      width:40px; height:40px; object-fit:cover;
+      border-radius:50%; margin-right:0.5rem;
     }
     button {
-      font-size: 1rem;
-      padding: 0.5rem 1rem;
-      margin: 0.5rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+      font-size:1rem; padding:0.5rem 1rem; margin:0.5rem;
+      border:none; border-radius:4px; cursor:pointer;
     }
-    button:hover { background: rgba(255,255,255,0.2); }
+    button:hover { background:rgba(255,255,255,0.2); }
     #hintBox {
-      margin: 1rem auto;
-      padding: 0.5rem 1rem;
-      background: rgba(200,200,200,0.4);
-      color: #000;
-      border-radius: 4px;
-      width: 60%;
-      cursor: default;
+      margin:1rem auto; padding:0.5rem 1rem;
+      background:rgba(200,200,200,0.4); color:#000;
+      border-radius:4px; width:60%; cursor:default;
     }
-    #hintBox.active { background: rgba(255,255,255,0.9); }
+    #hintBox.active { background:rgba(255,255,255,0.9); cursor:pointer; }
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      background: rgba(255,255,255,0.1);
+      width:100%; border-collapse:collapse; margin-top:1rem;
+      background:rgba(255,255,255,0.1);
     }
-    th, td {
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 0.5rem;
-      color: #fff;
-      vertical-align: middle;
+    th,td {
+      border:1px solid rgba(255,255,255,0.3);
+      padding:0.5rem; color:#fff; vertical-align:middle;
     }
-    th { background: rgba(255,255,255,0.2); }
-    .green { background: rgba(136,232,140,0.7); }
-    .yellow { background: rgba(254,240,138,0.7); color: #333; }
-    .gray  { background: rgba(221,221,221,0.7); color: #333; }
-    .arrow { font-weight: bold; }
-    img.person-photo {
-      width: 60px; height: 60px; object-fit: cover; border-radius: 50%;
-    }
-    /* Win overlay */
+    th { background:rgba(255,255,255,0.2); }
+    .green { background:rgba(136,232,140,0.7); }
+    .yellow { background:rgba(254,240,138,0.7); color:#333; }
+    .gray { background:rgba(221,221,221,0.7); color:#333; }
+    .arrow { font-weight:bold; }
+    img.person-photo { width:60px; height:60px; object-fit:cover; border-radius:50%; }
     #winOverlay {
-      position: fixed; top: 0; left: 0; right:0; bottom:0;
-      background: rgba(0,0,0,0.8);
-      display: flex; align-items:center; justify-content:center;
-      opacity: 0; pointer-events:none; transition: opacity 0.5s;
+      position:fixed; top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.8);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none; transition:opacity 0.5s;
     }
-    #winOverlay.show {
-      opacity:1; pointer-events:auto;
-    }
+    #winOverlay.show { opacity:1; pointer-events:auto; }
     #winContent {
-      background: #fff; color:#000;
-      padding:2rem; border-radius:8px; text-align:center;
-      max-width: 90%; 
+      background:#fff; color:#000; padding:2rem; border-radius:8px;
+      text-align:center; max-width:90%;
     }
     #winContent img { width:150px; height:150px; border-radius:50%; object-fit:cover; }
     #winContent h2 { margin:1rem 0; }
@@ -130,14 +97,9 @@
     <table id="board">
       <thead>
         <tr>
-          <th>Photo</th>
-          <th>Name</th>
-          <th>Birth&nbsp;Year</th>
-          <th>Height&nbsp;(cm)</th>
-          <th>Residence</th>
-          <th>Hair&nbsp;Color</th>
-          <th>Gender</th>
-          <th>Eye&nbsp;Color</th>
+          <th>Photo</th><th>Name</th><th>Birth Year</th>
+          <th>Height (cm)</th><th>Residence</th>
+          <th>Hair Color</th><th>Gender</th><th>Eye Color</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -146,13 +108,12 @@
 
   <div id="winOverlay">
     <div id="winContent">
-      <h2>Today’s Ølendle was&nbsp;<span id="winName"></span></h2>
+      <h2>Today’s Ølendle was <span id="winName"></span></h2>
       <img id="winPhoto" src="" alt="">
     </div>
   </div>
 
   <script>
-    // Data & config
     const placeholder = 'no-image.png';
     const MS_PER_DAY = 24*60*60*1000;
     const todayKey = 'olendle-date';
@@ -160,161 +121,160 @@
     const hintKey = 'olendle-hint';
 
     const people = [
-      { name:'Morten', birthYear:2008, height:182, residence:'Ølen', hairColor:'Brown', eyeColor:'Blue', gender:'M', imageUrl:'Morten.jpeg' },
-      { name:'Thomas Andre', birthYear:2008, height:190, residence:'Ølensvåg', hairColor:'Brown', eyeColor:'Brown', gender:'M', imageUrl:'Thomas_Andre.jpg' },
-      { name:'Eirik', birthYear:2008, height:175, residence:'Ølen', hairColor:'Blonde', eyeColor:'Blue', gender:'M', imageUrl:'Eirik.jpg' },
-      { name:'Sasha', birthYear:2008, height:182, residence:'Haugesund', hairColor:'Brown', eyeColor:'Blue', gender:'M', imageUrl:'Sasha.jpg' },
-      { name:'Dan Evan', birthYear:2008, height:0, residence:'Ølensvåg', hairColor:'Black', eyeColor:'Brown', gender:'M', imageUrl:'Dan_Evan.jpg' },
-      { name:'Endre', birthYear:2008, height:0, residence:'Ølen', hairColor:'Blonde', eyeColor:'Blue', gender:'M', imageUrl:'Endre.jpg' },
-      { name:'Gabri', birthYear:2007, height:0, residence:'Ølen', hairColor:'Blonde', eyeColor:'Blue', gender:'M', imageUrl:'Gabri.jpg' },
-      { name:'Ridwan', birthYear:2007, height:194, residence:'Skjold', hairColor:'Black', eyeColor:'Brown', gender:'M', imageUrl:'Ridwan.jpg' },
+      { name:'Morten',       birthYear:2008,height:182,residence:'Ølen',      hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Morten.jpeg' },
+      { name:'Thomas Andre', birthYear:2008,height:190,residence:'Ølensvåg', hairColor:'Brown', eyeColor:'Brown', gender:'M',imageUrl:'Thomas_Andre.jpg' },
+      { name:'Eirik',        birthYear:2008,height:175,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Eirik.jpg' },
+      { name:'Sasha',        birthYear:2008,height:182,residence:'Haugesund', hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Sasha.jpg' },
+      { name:'Dan Evan',     birthYear:2008,height:0,  residence:'Ølensvåg', hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Dan_Evan.jpg' },
+      { name:'Endre',        birthYear:2008,height:0,  residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Endre.jpg' },
+      { name:'Gabri',        birthYear:2007,height:0,  residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Gabri.jpg' },
+      { name:'Ridwan',       birthYear:2007,height:194,residence:'Skjold',    hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Ridwan.jpg' },
     ];
 
-    // Daily secret & reset check
+    // — Daily reset & secret pick
     function initDaily() {
-      const storedDate = localStorage.getItem(todayKey);
       const nowDay = Math.floor(Date.now()/MS_PER_DAY);
-      if (parseInt(storedDate)!==nowDay) {
-        // new day → clear
+      const stored = parseInt(localStorage.getItem(todayKey),10);
+      if (stored !== nowDay) {
         localStorage.setItem(todayKey, nowDay);
         localStorage.setItem(guessesKey, JSON.stringify([]));
         localStorage.setItem(hintKey, '5');
       }
+      return nowDay;
     }
-    initDaily();
-    const guesses = JSON.parse(localStorage.getItem(guessesKey));
-    let hintCount = parseInt(localStorage.getItem(hintKey));
-    const secret = people[nowDay % people.length] || people[0];
+    const nowDay = initDaily();
+    let guesses   = JSON.parse(localStorage.getItem(guessesKey)) || [];
+    let hintCount = parseInt(localStorage.getItem(hintKey),10) || 5;
+    const secret  = people[nowDay % people.length];
 
-    // DOM refs
-    const input = document.getElementById('guessInput');
-    const btn   = document.getElementById('guessBtn');
-    const sugg  = document.getElementById('suggestions');
-    const tbody = document.querySelector('#board tbody');
-    const hintBox = document.getElementById('hintBox');
+    // — DOM refs
+    const input    = document.getElementById('guessInput');
+    const btn      = document.getElementById('guessBtn');
+    const sugg     = document.getElementById('suggestions');
+    const tbody    = document.querySelector('#board tbody');
+    const hintBox  = document.getElementById('hintBox');
     const hintSpan = document.getElementById('hintCount');
     const winOverlay = document.getElementById('winOverlay');
-    const winName = document.getElementById('winName');
-    const winPhoto = document.getElementById('winPhoto');
+    const winName    = document.getElementById('winName');
+    const winPhoto   = document.getElementById('winPhoto');
 
-    // Restore old guesses in table
-    guesses.forEach(name => processGuess(name,true));
+    // — Restore previous guesses
+    guesses.forEach(name => processGuess(name, true));
     updateHintBox();
 
-    // Autocomplete suggestions (filters out already guessed)
+    // — Autocomplete (excludes already‐guessed)
     input.addEventListener('input', () => {
       const val = input.value.trim().toLowerCase();
-      sugg.innerHTML=''; if(!val){sugg.style.display='none';return;}
-      let matches = people.filter(p=>p.name.toLowerCase().includes(val) && !guesses.includes(p.name));
-      if(!matches.length){sugg.style.display='none';return;}
-      matches.forEach(p=>{
-        const div=document.createElement('div');
-        div.className='suggestion';
-        div.innerHTML=`<img src="${p.imageUrl||placeholder}" alt=""><span>${p.name}</span>`;
-        div.addEventListener('click',()=>{
-          input.value=p.name; sugg.style.display='none'; input.focus();
-        });
+      sugg.innerHTML = '';
+      if (!val) { sugg.style.display='none'; return; }
+      const matches = people
+        .filter(p => p.name.toLowerCase().includes(val))
+        .filter(p => !guesses.includes(p.name));
+      if (!matches.length) { sugg.style.display='none'; return; }
+      matches.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'suggestion';
+        div.innerHTML = `<img src="${p.imageUrl||placeholder}"><span>${p.name}</span>`;
+        div.onclick = () => { input.value = p.name; sugg.style.display='none'; input.focus(); };
         sugg.appendChild(div);
       });
-      sugg.style.display='block';
+      sugg.style.display = 'block';
     });
-    input.addEventListener('blur',()=>setTimeout(()=>sugg.style.display='none',100));
+    input.addEventListener('blur', () => setTimeout(()=>sugg.style.display='none',100));
 
-    // Process a guess (and optionally skip storing if restoring)
+    // — Handle a guess
     function processGuess(name, restoring=false) {
       const guess = people.find(p=>p.name.toLowerCase()===name.toLowerCase());
-      if(!guess) {
-        if(name==='holytemuskibidi') { // magic reset
-          localStorage.removeItem(guessesKey);
-          localStorage.removeItem(hintKey);
-          localStorage.removeItem(todayKey);
-          location.reload();
-        }
+      // magic reset
+      if (!restoring && name==='holytemuskibidi') {
+        localStorage.clear();
+        location.reload();
         return;
       }
+      if (!guess || guesses.includes(guess.name)) return;
 
       // record
-      if(!restoring) {
+      if (!restoring) {
         guesses.unshift(guess.name);
         localStorage.setItem(guessesKey, JSON.stringify(guesses));
       }
 
       // build row
-      const tr=document.createElement('tr');
-      const imgSrc=guess.imageUrl||placeholder;
-      tr.appendChild(cell(`<img class="person-photo" src="${imgSrc}" alt="">`,'gray'));
-      const numCell=(v,s)=>{
-        if(s===0) return cell(`${v} <span class="arrow">↓</span>`,'yellow');
-        if(v===s) { return cell(v,'green'); }
-        const dir=v<s?'↑':'↓';
+      const tr = document.createElement('tr');
+      const imgSrc = guess.imageUrl||placeholder;
+      tr.appendChild(cell(`<img class="person-photo" src="${imgSrc}">`,'gray'));
+
+      const numCell = (v,s) => {
+        if (s===0) return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+        if (v===s) return cell(v,'green');
+        const dir = v< s?'↑':'↓';
         return cell(`${v} <span class="arrow">${dir}</span>`,'yellow');
       };
-      const catCell=(v,s)=>{
-        if(s==='Unknown') return cell(`${v} <span class="arrow">↓</span>`,'yellow');
-        if(v===s) return cell(v,'green');
+      const catCell = (v,s) => {
+        if (s==='Unknown') return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+        if (v===s) return cell(v,'green');
         return cell(v,'gray');
       };
+
       tr.appendChild(cell(guess.name,'gray'));
-      tr.appendChild(numCell(guess.birthYear,secret.birthYear));
-      tr.appendChild(numCell(guess.height,secret.height));
-      tr.appendChild(catCell(guess.residence,secret.residence));
-      tr.appendChild(catCell(guess.hairColor,secret.hairColor));
-      tr.appendChild(catCell(guess.gender,secret.gender));
-      tr.appendChild(catCell(guess.eyeColor,secret.eyeColor));
+      tr.appendChild(numCell(guess.birthYear, secret.birthYear));
+      tr.appendChild(numCell(guess.height,      secret.height));
+      tr.appendChild(catCell(guess.residence,   secret.residence));
+      tr.appendChild(catCell(guess.hairColor,   secret.hairColor));
+      tr.appendChild(catCell(guess.gender,      secret.gender));
+      tr.appendChild(catCell(guess.eyeColor,    secret.eyeColor));
 
-      // insert newest on top
-      tbody.insertBefore(tr,tbody.firstChild);
+      // newest on top
+      tbody.insertBefore(tr, tbody.firstChild);
 
-      // update hint
-      if(secret.residence!=='Unknown' && !restoring) {
-        hintCount = Math.max(hintCount-1,0);
+      // hint countdown
+      if (!restoring && secret.residence !== 'Unknown' && hintCount>0) {
+        hintCount--;
         localStorage.setItem(hintKey, hintCount);
         updateHintBox();
       }
 
-      // win?
-      if(guess.name===secret.name) showWinPopup(guess);
-
+      // check win
+      if (guess.name === secret.name) showWinPopup(guess);
     }
 
-    // Submit
+    // — Submit from button or Enter
     function submitGuess() {
-      const name=input.value.trim();
-      if(!name) return;
+      const name = input.value.trim();
+      if (!name) return;
       processGuess(name,false);
-      input.value=''; input.focus();
+      input.value='';
+      input.focus();
     }
-    btn.addEventListener('click',submitGuess);
-    input.addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess();});
+    btn.onclick = submitGuess;
+    input.addEventListener('keydown', e => { if (e.key==='Enter') submitGuess(); });
 
-    // Hint box
-    function updateHintBox(){
-      if(hintCount>0) {
+    // — Hint box update
+    function updateHintBox() {
+      if (hintCount>0) {
         hintBox.classList.remove('active');
-        hintBox.textContent=`Residence hint in ${hintCount} guesses`;
+        hintBox.innerHTML = `Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
+        hintBox.onclick = null;
       } else {
         hintBox.classList.add('active');
-        hintBox.textContent='Show Hint';
-        hintBox.style.cursor='pointer';
-        hintBox.onclick=()=>{
-          alert('Residence: '+secret.residence);
-        };
+        hintBox.textContent = 'Show Hint';
+        hintBox.onclick = () => alert('Residence: '+secret.residence);
       }
     }
 
-    // Win overlay
-    function showWinPopup(p){
-      winName.textContent=p.name;
-      winPhoto.src=p.imageUrl||placeholder;
+    // — Win overlay
+    function showWinPopup(p) {
+      winName.textContent = p.name;
+      winPhoto.src = p.imageUrl||placeholder;
       winOverlay.classList.add('show');
     }
 
-    // helper
-    function cell(html,cls){
-      const td=document.createElement('td');
-      td.className=cls; td.innerHTML=html; return td;
+    // — helper cell
+    function cell(html,cls) {
+      const td = document.createElement('td');
+      td.className = cls; td.innerHTML = html;
+      return td;
     }
-
   </script>
 </body>
 </html>
