@@ -4,15 +4,22 @@
   <meta charset="UTF-8" />
   <title>Ølendle</title>
   <style>
-    body { margin:0; font-family:sans-serif;
+    body {
+      margin:0;
+      font-family:sans-serif;
       background:
         linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
-        url('background.jpg') center/cover no-repeat;
-      color:#fff; text-align:center;
+        url('background.jpg') center center/cover no-repeat;
+      color:#fff;
+      text-align:center;
     }
     main {
-      position:relative; max-width:900px; margin:2rem auto;
-      background:rgba(255,255,255,0.1); padding:1rem; border-radius:8px;
+      position:relative;
+      max-width:900px;
+      margin:2rem auto;
+      background:rgba(255,255,255,0.1);
+      padding:1rem;
+      border-radius:8px;
     }
     h1 { font-size:3rem; margin:0; }
     .byline { font-size:0.9rem; margin-bottom:0.5rem; opacity:0.8; }
@@ -27,7 +34,6 @@
       max-height:200px; overflow-y:auto;
       background:rgba(255,255,255,0.9); color:#000;
       border-radius:4px; display:none; z-index:10;
-      box-sizing:border-box;
     }
     .suggestion { display:flex; align-items:center; padding:0.25rem; cursor:pointer; }
     .suggestion:hover { background:#eee; }
@@ -69,8 +75,10 @@
     }
     #winOverlay.show { opacity:1; pointer-events:auto; }
     #winContent {
+      position:relative;
       background:rgba(50,50,50,0.95); color:#fff;
-      padding:2rem; border-radius:8px; text-align:center; max-width:90%;
+      padding:2rem; border-radius:8px; text-align:center;
+      max-width:90%;
     }
     #winContent img {
       width:150px; height:150px; border-radius:50%; object-fit:cover;
@@ -78,6 +86,10 @@
     }
     #winContent h2 { margin:1rem 0; }
     #winContent p { margin-top:0.5rem; font-size:1.2rem; }
+    #winClose {
+      position:absolute; top:8px; right:12px;
+      font-size:1.5rem; cursor:pointer; color:#fff;
+    }
   </style>
 </head>
 <body>
@@ -109,6 +121,7 @@
 
   <div id="winOverlay">
     <div id="winContent">
+      <div id="winClose">×</div>
       <h2>Today’s Ølendle was <span id="winName"></span></h2>
       <img id="winPhoto" src="" alt="">
       <p>You got it in <span id="winCount"></span> guesses!</p>
@@ -116,13 +129,18 @@
   </div>
 
   <script>
+    // Uncomment/flesh this out later if you want different UI on mobile vs desktop
+    // function isMobile() {
+    //   return /Mobi|Android/i.test(navigator.userAgent);
+    // }
+
     const placeholder = 'no-image.png';
-    const MS_PER_DAY   = 24*60*60*1000;
-    const todayKey     = 'olendle-date';
-    const guessesKey   = 'olendle-guesses';
-    const hintKey      = 'olendle-hint';
-    const wonKey       = 'olendle-won';
-    const totalWinsKey = 'olendle-winTotal';
+    const MS_PER_DAY = 24*60*60*1000;
+    const todayKey   = 'olendle-date';
+    const guessesKey = 'olendle-guesses';
+    const hintKey    = 'olendle-hint';
+    const wonKey     = 'olendle-won';
+    const totalKey   = 'olendle-totalWins';
 
     const people = [
       { name:'Morten',       birthYear:2008,height:182,residence:'Ølen',      hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Morten.jpeg' },
@@ -133,26 +151,27 @@
       { name:'Endre',        birthYear:2008,height:0,  residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Endre.jpg' },
       { name:'Gabri',        birthYear:2007,height:0,  residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Gabri.jpg' },
       { name:'Ridwan',       birthYear:2007,height:194,residence:'Skjold',    hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Ridwan.jpg' },
+      { name:'Sina',         birthYear:2007,height:175,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'F',imageUrl:'Sina.jpg' }
     ];
 
-    // — Initialize daily & totals
-    function initDaily() {
-      const nowDay = Math.floor(Date.now()/MS_PER_DAY);
-      const storedDay = parseInt(localStorage.getItem(todayKey),10);
-      if (storedDay !== nowDay) {
-        localStorage.setItem(todayKey, nowDay);
+    // — Daily initialization
+    function initDaily(){
+      const now = Math.floor(Date.now()/MS_PER_DAY);
+      const stored = parseInt(localStorage.getItem(todayKey),10);
+      if (stored !== now){
+        localStorage.setItem(todayKey, now);
         localStorage.setItem(guessesKey, JSON.stringify([]));
         localStorage.setItem(hintKey, '5');
         localStorage.removeItem(wonKey);
       }
-      return nowDay;
+      return now;
     }
-    const nowDay   = initDaily();
+    const today    = initDaily();
     let guesses    = JSON.parse(localStorage.getItem(guessesKey)) || [];
     let hintCount  = parseInt(localStorage.getItem(hintKey),10) || 5;
-    let hasWonToday= localStorage.getItem(wonKey) === 'true';
-    let totalWins  = parseInt(localStorage.getItem(totalWinsKey),10) || 0;
-    const secret   = people[nowDay % people.length];
+    let wonToday   = localStorage.getItem(wonKey) === 'true';
+    let totalWins  = parseInt(localStorage.getItem(totalKey),10) || 0;
+    const secret   = people[today % people.length];
 
     // — DOM refs
     const input      = document.getElementById('guessInput');
@@ -162,52 +181,52 @@
     const hintBox    = document.getElementById('hintBox');
     const hintReveal = document.getElementById('hintReveal');
     const winOverlay = document.getElementById('winOverlay');
+    const winContent = document.getElementById('winContent');
+    const winClose   = document.getElementById('winClose');
     const winName    = document.getElementById('winName');
     const winPhoto   = document.getElementById('winPhoto');
     const winCount   = document.getElementById('winCount');
-    const winCounter = document.getElementById('winTotal');
+    const winTotal   = document.getElementById('winTotal');
 
     // — Show total wins
-    winCounter.textContent = totalWins;
+    winTotal.textContent = totalWins;
 
-    // — Restore past guesses
-    guesses.forEach(name => processGuess(name, true));
+    // — Restore old guesses
+    guesses.forEach(name => processGuess(name,true));
     updateHintBox();
 
-    // — If already won, show popup
-    if (hasWonToday) {
-      showWinPopup({ name: secret.name, imageUrl: secret.imageUrl });
+    // — If already won, show popup on load
+    if (wonToday) {
+      showWin(secret.name, secret.imageUrl, guesses.length);
     }
 
-    // — Autocomplete filter
+    // — Autocomplete
     input.addEventListener('input', () => {
       const val = input.value.trim().toLowerCase();
-      sugg.innerHTML = '';
-      if (!val) { sugg.style.display = 'none'; return; }
+      sugg.innerHTML='';
+      if (!val){ sugg.style.display='none'; return; }
       const matches = people
-        .filter(p => p.name.toLowerCase().includes(val))
-        .filter(p => !guesses.includes(p.name));
-      if (!matches.length) { sugg.style.display = 'none'; return; }
-      matches.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'suggestion';
-        div.innerHTML = `<img src="${p.imageUrl||placeholder}"><span>${p.name}</span>`;
-        div.onclick = () => {
-          input.value = p.name;
-          sugg.style.display = 'none';
-          input.focus();
+        .filter(p=>p.name.toLowerCase().includes(val))
+        .filter(p=>!guesses.includes(p.name));
+      if (!matches.length){ sugg.style.display='none'; return; }
+      matches.forEach(p=>{
+        const div=document.createElement('div');
+        div.className='suggestion';
+        div.innerHTML=`<img src="${p.imageUrl||placeholder}"><span>${p.name}</span>`;
+        div.onclick=()=>{
+          input.value=p.name; sugg.style.display='none'; input.focus();
         };
         sugg.appendChild(div);
       });
-      sugg.style.display = 'block';
+      sugg.style.display='block';
     });
-    input.addEventListener('blur', () => setTimeout(() => sugg.style.display='none',100));
+    input.addEventListener('blur', ()=>setTimeout(()=>sugg.style.display='none',100));
 
     // — Process guess
-    function processGuess(name, restoring=false) {
+    function processGuess(name, restoring=false){
       const guess = people.find(p=>p.name.toLowerCase()===name.toLowerCase());
-      if (!guess) {
-        if (!restoring && name==='holytemuskibidi') {
+      if (!guess){
+        if (!restoring && name==='holytemuskibidi'){
           localStorage.clear(); location.reload();
         }
         return;
@@ -215,24 +234,23 @@
       if (guesses.includes(guess.name)) return;
 
       // record
-      if (!restoring) {
+      if (!restoring){
         guesses.unshift(guess.name);
         localStorage.setItem(guessesKey, JSON.stringify(guesses));
       }
 
       // build row
-      const tr = document.createElement('tr');
+      const tr=document.createElement('tr');
       tr.appendChild(cell(`<img class="person-photo" src="${guess.imageUrl||placeholder}">`,'gray'));
 
-      const numCell = (v,s) => {
-        if (s===0)             return cell(`${v} <span class="arrow">↓</span>`,'yellow');
-        if (v===s)             return cell(v,'green');
-        const dir = v<s?'↑':'↓';
-        return cell(`${v} <span class="arrow">${dir}</span>`,'yellow');
+      const numCell=(v,s)=>{
+        if (s===0)              return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+        if (v===s)              return cell(v,'green');
+        const dir=v<s?'↑':'↓'; return cell(`${v} <span class="arrow">${dir}</span>`,'yellow');
       };
-      const catCell = (v,s) => {
-        if (s==='Unknown')     return cell(`${v} <span class="arrow">↓</span>`,'yellow');
-        if (v===s)             return cell(v,'green');
+      const catCell=(v,s)=>{
+        if (s==='Unknown')      return cell(`${v} <span class="arrow">↓</span>`,'yellow');
+        if (v===s)              return cell(v,'green');
         return cell(v,'gray');
       };
 
@@ -244,66 +262,68 @@
       tr.appendChild(catCell(guess.gender,     secret.gender));
       tr.appendChild(catCell(guess.eyeColor,   secret.eyeColor));
 
-      tbody.insertBefore(tr, tbody.firstChild);
+      tbody.insertBefore(tr,tbody.firstChild);
 
       // hint countdown
-      if (!restoring && secret.residence!=='Unknown' && hintCount>0) {
+      if (!restoring && secret.residence!=='Unknown' && hintCount>0){
         hintCount--;
         localStorage.setItem(hintKey, hintCount);
         updateHintBox();
       }
 
       // win logic
-      if (guess.name === secret.name && !hasWonToday) {
-        hasWonToday = true;
-        localStorage.setItem(wonKey, 'true');
+      if (guess.name===secret.name && !wonToday){
+        wonToday=true;
+        localStorage.setItem(wonKey,'true');
         totalWins++;
-        localStorage.setItem(totalWinsKey, totalWins);
-        winCounter.textContent = totalWins;
-        showWinPopup(guess);
+        localStorage.setItem(totalKey,totalWins);
+        winTotal.textContent=totalWins;
+        showWin(guess.name, guess.imageUrl, guesses.length);
       }
     }
 
     // — Submit guess
-    function submitGuess() {
-      const name = input.value.trim();
+    function submitGuess(){
+      const name=input.value.trim();
       if (!name) return;
-      processGuess(name, false);
+      processGuess(name,false);
       input.value=''; input.focus();
     }
-    btn.onclick = submitGuess;
-    input.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
+    btn.onclick=submitGuess;
+    input.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
 
-    // — Hint box logic
-    hintBox.addEventListener('click', () => {
-      if (hintCount===0) {
-        hintBox.style.display = 'none';
-        hintReveal.textContent = 'Residence: ' + secret.residence;
+    // — Hint box
+    hintBox.addEventListener('click',()=>{
+      if (hintCount===0){
+        hintBox.style.display='none';
+        hintReveal.textContent='Residence: '+secret.residence;
       }
     });
-    function updateHintBox() {
-      if (hintCount>0) {
+    function updateHintBox(){
+      if (hintCount>0){
         hintBox.classList.remove('active');
-        hintBox.innerHTML = `Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
+        hintBox.innerHTML=`Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
       } else {
         hintBox.classList.add('active');
-        hintBox.textContent = 'Show Hint';
+        hintBox.textContent='Show Hint';
       }
     }
 
     // — Win overlay
-    function showWinPopup(p) {
-      winName.textContent  = p.name;
-      winPhoto.src         = p.imageUrl || placeholder;
-      winCount.textContent = guesses.length;
+    function showWin(name,img,count){
+      winName.textContent=name;
+      winPhoto.src=img||placeholder;
+      winCount.textContent=count;
       winOverlay.classList.add('show');
     }
+    winClose.onclick = () => {
+      winOverlay.classList.remove('show');
+    };
 
-    // — Helper for table cells
-    function cell(html,cls) {
-      const td = document.createElement('td');
-      td.className = cls;
-      td.innerHTML = html;
+    // — Helper cell
+    function cell(html,cls){
+      const td=document.createElement('td');
+      td.className=cls; td.innerHTML=html;
       return td;
     }
   </script>
