@@ -14,6 +14,7 @@
       text-align: center;
     }
     main {
+      position: relative;
       max-width: 900px;
       margin: 2rem auto;
       background: rgba(255,255,255,0.1);
@@ -22,14 +23,45 @@
     }
     h1 { font-size: 3rem; margin: 0; }
     .byline { font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8; }
-    input, button {
+    #guessInput {
       font-size: 1rem;
       padding: 0.5rem;
-      margin: 0.5rem;
+      width: 60%;
       border: none;
       border-radius: 4px;
     }
-    button { cursor: pointer; }
+    #suggestions {
+      position: absolute;
+      top: calc(2rem + 1.5rem + 40px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      max-height: 200px;
+      overflow-y: auto;
+      background: rgba(255,255,255,0.9);
+      color: #000;
+      border-radius: 4px;
+      display: none;
+      z-index: 10;
+    }
+    .suggestion {
+      display: flex;
+      align-items: center;
+      padding: 0.25rem;
+      cursor: pointer;
+    }
+    .suggestion:hover { background: #eee; }
+    .suggestion img {
+      width: 40px; height: 40px; object-fit: cover; border-radius: 50%; margin-right: 0.5rem;
+    }
+    button {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
     button:hover { background: rgba(255,255,255,0.2); }
     table {
       width: 100%;
@@ -41,6 +73,7 @@
       border: 1px solid rgba(255,255,255,0.3);
       padding: 0.5rem;
       color: #fff;
+      vertical-align: middle;
     }
     th { background: rgba(255,255,255,0.2); }
     .green { background: rgba(136,232,140,0.7); }
@@ -48,10 +81,7 @@
     .gray  { background: rgba(221,221,221,0.7); color: #333; }
     .arrow { font-weight: bold; }
     img.person-photo {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 50%;
+      width: 60px; height: 60px; object-fit: cover; border-radius: 50%;
     }
   </style>
 </head>
@@ -60,8 +90,9 @@
     <h1>Ølendle</h1>
     <div class="byline">By Morten</div>
 
-    <input type="text" id="guessInput" placeholder="Type a name…" />
+    <input type="text" id="guessInput" placeholder="Type a name…" autocomplete="off" />
     <button id="guessBtn">Guess</button>
+    <div id="suggestions"></div>
 
     <table id="board">
       <thead>
@@ -82,79 +113,91 @@
 
   <script>
     const people = [
-      { name: 'Morten',       birthYear: 2008, height: 182, residence: 'Ølen',      hairColor: 'Brown', eyeColor: 'Blue',  gender: 'M', imageUrl: 'Morten.jpeg' },
-      { name: 'Thomas Andre', birthYear: 2008, height: 190, residence: 'Ølensvåg', hairColor: 'Brown', eyeColor: 'Brown', gender: 'M', imageUrl: 'Thomas_Andre.jpg' },
-      { name: 'Eirik',        birthYear: 2008, height: 175, residence: 'Ølen',      hairColor: 'Blonde',eyeColor: 'Blue',  gender: 'M', imageUrl: 'Eirik.jpg' },
-      { name: 'Sasha',        birthYear: 2008, height: 182, residence: 'Haugesund', hairColor: 'Brown',eyeColor: 'Blue',  gender: 'M', imageUrl: 'Sasha.jpg' },
-      { name: 'Dan Evan',     birthYear: 2008, height: 0,   residence: 'Ølensvåg', hairColor: 'Black',eyeColor: 'Brown', gender: 'M', imageUrl: 'Dan_Evan.jpg' },
-      { name: 'Endre',        birthYear: 2008, height: 0,   residence: 'Ølen',      hairColor: 'Blonde',eyeColor: 'Blue',  gender: 'M', imageUrl: 'Endre.jpg' },
-      { name: 'Gabri',        birthYear: 2007, height: 0,   residence: 'Unknown',  hairColor: 'Blonde',eyeColor: 'Blue',  gender: 'M', imageUrl: 'Gabri.jpg' },
-      // …keep adding more as needed
+      { name: 'Morten',       birthYear: 2008, height: 182, residence: 'Ølen',      hairColor: 'Brown',  eyeColor: 'Blue',   gender: 'M', imageUrl: 'Morten.jpeg' },
+      { name: 'Thomas Andre', birthYear: 2008, height: 190, residence: 'Ølensvåg', hairColor: 'Brown',  eyeColor: 'Brown',  gender: 'M', imageUrl: 'Thomas_Andre.jpg' },
+      { name: 'Eirik',        birthYear: 2008, height: 175, residence: 'Ølen',      hairColor: 'Blonde', eyeColor: 'Blue',   gender: 'M' },
+      { name: 'Sasha',        birthYear: 2008, height: 182, residence: 'Haugesund', hairColor: 'Brown',  eyeColor: 'Blue',   gender: 'M' },
+      { name: 'Dan Evan',     birthYear: 2008, height: 0,   residence: 'Ølensvåg', hairColor: 'Black',  eyeColor: 'Brown',  gender: 'M' },
+      { name: 'Endre',        birthYear: 2008, height: 0,   residence: 'Ølen',      hairColor: 'Blonde', eyeColor: 'Blue',   gender: 'M' },
+      { name: 'Gabri',        birthYear: 2007, height: 0,   residence: 'Unknown',  hairColor: 'Blonde', eyeColor: 'Blue',   gender: 'M' },
     ];
-
     const placeholder = 'no-image.png';
-
-    // daily secret
     const MS_PER_DAY = 24*60*60*1000;
-    const idx = Math.floor(Date.now()/MS_PER_DAY) % people.length;
-    const secret = people[idx];
+    const secret = people[Math.floor(Date.now()/MS_PER_DAY) % people.length];
 
-    const tbody = document.querySelector('#board tbody');
     const input = document.getElementById('guessInput');
     const btn   = document.getElementById('guessBtn');
+    const sugg  = document.getElementById('suggestions');
+    const tbody = document.querySelector('#board tbody');
 
-    btn.addEventListener('click', () => {
+    // show suggestions as you type
+    input.addEventListener('input', () => {
+      const val = input.value.trim().toLowerCase();
+      sugg.innerHTML = '';
+      if (!val) { sugg.style.display = 'none'; return; }
+      const matches = people.filter(p => p.name.toLowerCase().includes(val));
+      if (!matches.length) { sugg.style.display = 'none'; return; }
+      matches.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'suggestion';
+        div.innerHTML = `<img src="${p.imageUrl||placeholder}" alt=""><span>${p.name}</span>`;
+        div.addEventListener('click', () => {
+          input.value = p.name;
+          sugg.style.display = 'none';
+          input.focus();
+        });
+        sugg.appendChild(div);
+      });
+      sugg.style.display = 'block';
+    });
+    // hide on blur
+    input.addEventListener('blur', () => setTimeout(()=>sugg.style.display='none',100));
+
+    // handle guess submission
+    function submitGuess() {
       const name = input.value.trim().toLowerCase();
       const guess = people.find(p => p.name.toLowerCase() === name);
-      if (!guess) return alert('Unknown name! Use one exactly from your list.');
-
+      if (!guess) return; // ignore unknown
       const tr = document.createElement('tr');
 
       // photo
       const img = guess.imageUrl || placeholder;
-      const imgCell = document.createElement('td');
-      imgCell.innerHTML = `<img class="person-photo" src="${img}" alt="${guess.name}">`;
-      tr.appendChild(imgCell);
+      tr.appendChild(cell(`<img class="person-photo" src="${img}" alt="">`, 'gray'));
 
-      // helpers
-      function numCell(val, secretVal) {
-        if (val === secretVal) return makeCell(val, 'green');
-        if (val === 0 || val === 'Unknown') {
-          return makeCell(`Unknown <span class="arrow">↓</span>`, 'yellow');
-        }
-        const dir = val < secretVal ? '↑' : '↓';
-        return makeCell(`${val} <span class="arrow">${dir}</span>`, 'yellow');
-      }
-      function catCell(val, secretVal) {
-        if (val === secretVal) return makeCell(val, 'green');
-        if (val === 'Unknown') return makeCell(`Unknown <span class="arrow">↓</span>`, 'yellow');
-        return makeCell(val, 'gray');
-      }
+      // compare helpers
+      const numCell = (v,s) => {
+        if (v===s) return cell(v, 'green');
+        if (!v)  return cell(`Unknown <span class="arrow">↓</span>`, 'yellow');
+        const dir = v<s ? '↑':'↓';
+        return cell(`${v} <span class="arrow">${dir}</span>`, 'yellow');
+      };
+      const catCell = (v,s) => {
+        if (v===s) return cell(v, 'green');
+        if (v==='Unknown') return cell(`Unknown <span class="arrow">↓</span>`, 'yellow');
+        return cell(v, 'gray');
+      };
 
-      // name
-      tr.appendChild(makeCell(guess.name, 'gray'));
-      // birthYear
+      tr.appendChild(cell(guess.name, 'gray'));
       tr.appendChild(numCell(guess.birthYear, secret.birthYear));
-      // height
-      tr.appendChild(numCell(guess.height, secret.height));
-      // residence
-      tr.appendChild(catCell(guess.residence, secret.residence));
-      // hairColor
-      tr.appendChild(catCell(guess.hairColor, secret.hairColor));
-      // gender
-      tr.appendChild(catCell(guess.gender, secret.gender));
-      // eyeColor
-      tr.appendChild(catCell(guess.eyeColor, secret.eyeColor));
+      tr.appendChild(numCell(guess.height,    secret.height));
+      tr.appendChild(catCell(guess.residence,  secret.residence));
+      tr.appendChild(catCell(guess.hairColor,  secret.hairColor));
+      tr.appendChild(catCell(guess.gender,     secret.gender));
+      tr.appendChild(catCell(guess.eyeColor,   secret.eyeColor));
 
       tbody.appendChild(tr);
       input.value = '';
       input.focus();
+    }
+
+    btn.addEventListener('click', submitGuess);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitGuess();
     });
 
-    function makeCell(html, cls) {
-      const td = document.createElement('td');
-      td.className = cls;
-      td.innerHTML = html;
+    function cell(html,cls){
+      const td=document.createElement('td');
+      td.className=cls; td.innerHTML=html;
       return td;
     }
   </script>
