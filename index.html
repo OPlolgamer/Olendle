@@ -4,34 +4,16 @@
   <meta charset="UTF-8" />
   <title>Ølendle</title>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
+    html, body { height: 100%; margin: 0; }
     body {
       font-family: sans-serif;
-      background-image:
-        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-        url('background.jpg');
-      background-position: center;
-      background-repeat: no-repeat;
+      background:
+        linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+        url('background.jpg') center/cover no-repeat;
       background-size: cover;
       color: #fff;
       text-align: center;
     }
-    /* Desktop tweak: fit vertically */
-    @media (min-width: 800px) {
-      body {
-        background-size: auto 100%;
-      }
-    }
-    /* Mobile tweak: fit horizontally */
-    @media (max-width: 600px) {
-      body {
-        background-size: 100% auto;
-      }
-    }
-
     main {
       position: relative;
       max-width: 900px;
@@ -40,74 +22,97 @@
       padding: 1rem;
       border-radius: 8px;
     }
-    h1 { font-size: 3rem; margin: 0; }
-    .byline { font-size: 0.9rem; margin-bottom: 0.5rem; opacity: 0.8; }
-    #winCounter { font-size: 1rem; margin-bottom: 1rem; }
+    #resetBtn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #888;
+      color: #fff;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    h1 { margin: 0; font-size: 3rem; }
+    .byline { font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.5rem; }
+    #winCounter { margin-bottom: 1rem; }
 
     .autocomplete { position: relative; display: inline-block; width: 60%; }
     #guessInput {
-      font-size: 1rem; padding: 0.5rem; width: 100%;
-      border: none; border-radius: 4px; box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%; padding: 0.5rem;
+      border: none; border-radius: 4px;
+      font-size: 1rem;
     }
     #suggestions {
       position: absolute; top: 100%; left: 0; width: 100%;
       max-height: 200px; overflow-y: auto;
-      background: rgba(255,255,255,0.9); color: #000;
-      border-radius: 4px; display: none; z-index: 10;
+      background: #fff; color: #000; border-radius: 4px;
+      display: none; z-index: 10;
     }
-    .suggestion { display: flex; align-items: center; padding: 0.25rem; cursor: pointer; }
+    .suggestion {
+      display: flex; align-items: center;
+      padding: 0.25rem; cursor: pointer;
+    }
     .suggestion:hover { background: #eee; }
     .suggestion img {
-      width: 40px; height: 40px; object-fit: cover;
-      border-radius: 50%; margin-right: 0.5rem;
+      width: 40px; height: 40px;
+      object-fit: cover; border-radius: 50%;
+      margin-right: 0.5rem;
     }
 
     button {
-      font-size: 1rem; padding: 0.5rem 1rem; margin: 0.5rem;
-      border: none; border-radius: 4px; cursor: pointer;
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none; border-radius: 4px;
+      cursor: pointer;
     }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
 
     #hintBox {
-      margin: 1rem auto; padding: 0.5rem 1rem;
+      width: 60%; margin: 1rem auto;
+      padding: 0.5rem 1rem;
       background: rgba(200,200,200,0.4); color: #000;
-      border-radius: 4px; width: 60%; cursor: default;
+      border-radius: 4px; cursor: default;
     }
-    #hintBox.active { background: rgba(255,255,255,0.9); cursor: pointer; }
-    #hintReveal { margin-top: 0.5rem; font-size: 1rem; }
+    #hintBox.active { background: #fff; cursor: pointer; }
+    #hintReveal { margin-top: 0.5rem; }
 
     .table-wrapper {
-      overflow-x: auto;
-      margin-top: 1rem;
+      overflow-x: auto; margin-top: 1rem;
     }
     table {
-      width: 100%; border-collapse: collapse;
+      width: 100%; min-width: 700px;
+      border-collapse: collapse;
       background: rgba(255,255,255,0.1);
-      min-width: 700px;
     }
     th, td {
+      padding: 0.5rem; color: #fff;
       border: 1px solid rgba(255,255,255,0.3);
-      padding: 0.5rem; color: #fff; white-space: nowrap;
+      white-space: nowrap;
     }
     th { background: rgba(255,255,255,0.2); }
     .green { background: rgba(136,232,140,0.7); }
     .yellow { background: rgba(254,240,138,0.7); color: #333; }
     .gray { background: rgba(221,221,221,0.7); color: #333; }
     .arrow { font-weight: bold; }
-    img.person-photo { width: 60px; height: 60px; object-fit: cover; border-radius: 50%; }
+    img.person-photo {
+      width: 60px; height: 60px; object-fit: cover;
+      border-radius: 50%;
+    }
 
     @media (max-width: 600px) {
-      .autocomplete { width: 100%; }
-      #hintBox { width: 100%; }
-      .table-wrapper { margin-top: 0.5rem; }
+      .autocomplete, #hintBox { width: 100%; }
       table { min-width: 500px; }
       img.person-photo { width: 50px; height: 50px; }
       button { width: 100%; }
     }
 
     #winOverlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      position: fixed; top:0; left:0; right:0; bottom:0;
       background: rgba(0,0,0,0.8);
       display: flex; align-items: center; justify-content: center;
       opacity: 0; pointer-events: none; transition: opacity 0.5s;
@@ -121,20 +126,22 @@
       padding: 2rem; border-radius: 8px; text-align: center;
       max-width: 90%;
     }
-    #winContent img {
-      width: 150px; height: 150px; border-radius: 50%; object-fit: cover;
-      border: 2px solid #fff;
-    }
-    #winContent h2 { margin: 1rem 0; }
-    #winContent p { margin-top: 0.5rem; font-size: 1.2rem; }
     #winClose {
       position: absolute; top: 8px; right: 12px;
       font-size: 1.5rem; cursor: pointer; color: #fff;
     }
+    #winContent img {
+      width: 150px; height: 150px;
+      border-radius: 50%; object-fit: cover;
+      border: 2px solid #fff;
+    }
+    #winContent h2 { margin: 1rem 0; }
+    #winContent p { margin-top: 0.5rem; font-size: 1.2rem; }
   </style>
 </head>
 <body>
   <main>
+    <button id="resetBtn">Reset</button>
     <h1>Ølendle</h1>
     <div class="byline">By Morten</div>
     <div id="winCounter">Total Wins: <span id="winTotal">0</span></div>
@@ -173,88 +180,94 @@
 
   <script>
     const placeholder = 'no-image.png';
-    const DAY_MS     = 24*60*60*1000;
-    const keys = {
-      day: 'olendle-date',
-      guesses: 'olendle-guesses',
-      hint: 'olendle-hint',
-      won: 'olendle-won',
-      total: 'olendle-totalWins'
+    const DAY_MS = 24*60*60*1000;
+    const KEYS = {
+      DAY: 'olendle-date',
+      G: 'olendle-guesses',
+      H: 'olendle-hint',
+      W: 'olendle-won',
+      T: 'olendle-totalWins'
     };
 
     const people = [
-      { name:'Morten',       birthYear:2008,height:182,residence:'Ølen',      hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Morten.jpeg' },
-      { name:'Thomas Andre', birthYear:2008,height:190,residence:'Ølensvåg', hairColor:'Brown', eyeColor:'Brown', gender:'M',imageUrl:'Thomas_Andre.jpg' },
-      { name:'Eirik',        birthYear:2008,height:176,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Eirik.jpg' },
-      { name:'Sasha',        birthYear:2008,height:182,residence:'Haugesund', hairColor:'Brown', eyeColor:'Blue',  gender:'M',imageUrl:'Sasha.jpg' },
-      { name:'Dan Evan',     birthYear:2008,height:180,residence:'Ølensvåg', hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Dan_Evan.jpg' },
-      { name:'Endre',        birthYear:2008,height:182,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Endre.jpg' },
-      { name:'Gabri',        birthYear:2007,height:182,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M',imageUrl:'Gabri.jpg' },
-      { name:'Ridwan',       birthYear:2007,height:194,residence:'Skjold',    hairColor:'Black', eyeColor:'Brown', gender:'M',imageUrl:'Ridwan.jpg' },
-      { name:'Sina',         birthYear:2007,height:175,residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'F',imageUrl:'Sina.jpg' }
+      { name:'Morten', birthYear:2008,height:182,residence:'Ølen',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Morten.jpeg' },
+      { name:'Thomas Andre',birthYear:2008,height:190,residence:'Ølensvåg',hairColor:'Brown',eyeColor:'Brown',gender:'M',imageUrl:'Thomas_Andre.jpg' },
+      { name:'Eirik', birthYear:2008,height:176,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'M',imageUrl:'Eirik.jpg' },
+      { name:'Sasha', birthYear:2008,height:182,residence:'Haugesund',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Sasha.jpg' },
+      { name:'Dan Evan',birthYear:2008,height:180,residence:'Ølensvåg',hairColor:'Black',eyeColor:'Brown',gender:'M',imageUrl:'Dan_Evan.jpg' },
+      { name:'Endre', birthYear:2008,height:182,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'M',imageUrl:'Endre.jpg' },
+      { name:'Gabri', birthYear:2007,height:182,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'M',imageUrl:'Gabri.jpg' },
+      { name:'Ridwan',birthYear:2007,height:194,residence:'Skjold',hairColor:'Black',eyeColor:'Brown',gender:'M',imageUrl:'Ridwan.jpg' },
+      { name:'Sina', birthYear:2007,height:175,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'F',imageUrl:'Sina.jpg' }
     ];
 
-    function init() {
+    function initDay(){
       const now = Math.floor(Date.now()/DAY_MS);
-      if (parseInt(localStorage.getItem(keys.day),10)!==now) {
-        localStorage.setItem(keys.day, now);
-        localStorage.setItem(keys.guesses, JSON.stringify([]));
-        localStorage.setItem(keys.hint, '5');
-        localStorage.removeItem(keys.won);
+      if (parseInt(localStorage.getItem(KEYS.DAY),10)!==now){
+        localStorage.setItem(KEYS.DAY, now);
+        localStorage.setItem(KEYS.G, JSON.stringify([]));
+        localStorage.setItem(KEYS.H, '5');
+        localStorage.removeItem(KEYS.W);
       }
       return now;
     }
-    const today    = init();
-    let guesses    = JSON.parse(localStorage.getItem(keys.guesses)) || [];
-    let hintCount  = parseInt(localStorage.getItem(keys.hint),10) || 5;
-    let wonToday   = localStorage.getItem(keys.won)==='true';
-    let totalWins  = parseInt(localStorage.getItem(keys.total),10) || 0;
-    const secret   = people[today % people.length];
+    const today = initDay();
+    let guesses   = JSON.parse(localStorage.getItem(KEYS.G)) || [];
+    let hintCnt   = parseInt(localStorage.getItem(KEYS.H),10) || 5;
+    let wonToday  = localStorage.getItem(KEYS.W)==='true';
+    let totalWins = parseInt(localStorage.getItem(KEYS.T),10) || 0;
+    const secret  = people[today % people.length];
 
-    // refs
-    const input      = document.getElementById('guessInput');
-    const btn        = document.getElementById('guessBtn');
-    const sugg       = document.getElementById('suggestions');
-    const tbody      = document.querySelector('#board tbody');
-    const hintBox    = document.getElementById('hintBox');
-    const hintReveal = document.getElementById('hintReveal');
-    const winOverlay = document.getElementById('winOverlay');
-    const winClose   = document.getElementById('winClose');
-    const winName    = document.getElementById('winName');
-    const winPhoto   = document.getElementById('winPhoto');
-    const winCount   = document.getElementById('winCount');
-    const winTotal   = document.getElementById('winTotal');
+    // Refs
+    const iGuess   = document.getElementById('guessInput');
+    const bGuess   = document.getElementById('guessBtn');
+    const sBox     = document.getElementById('suggestions');
+    const tbody    = document.querySelector('#board tbody');
+    const hBox     = document.getElementById('hintBox');
+    const hReveal  = document.getElementById('hintReveal');
+    const wOverlay = document.getElementById('winOverlay');
+    const wClose   = document.getElementById('winClose');
+    const wName    = document.getElementById('winName');
+    const wPhoto   = document.getElementById('winPhoto');
+    const wCount   = document.getElementById('winCount');
+    const wTotal   = document.getElementById('winTotal');
+    const bReset   = document.getElementById('resetBtn');
 
-    winTotal.textContent = totalWins;
-    // restore
+    wTotal.textContent = totalWins;
+    // restore rows
     guesses.forEach(n=>processGuess(n,true));
     updateHint();
 
-    if (wonToday) showWin(secret.name, secret.imageUrl, guesses.length);
+    if(wonToday) showWin(secret.name, secret.imageUrl, guesses.length);
+
+    // reset button
+    bReset.onclick = ()=>{ localStorage.clear(); location.reload(); };
 
     // autocomplete
-    input.addEventListener('input',()=>{
-      const v = input.value.trim().toLowerCase();
-      sugg.innerHTML=''; if(!v){sugg.style.display='none';return;}
+    iGuess.addEventListener('input',()=>{
+      const v = iGuess.value.trim().toLowerCase();
+      sBox.innerHTML = '';
+      if(!v){ sBox.style.display='none'; return; }
       const m = people.filter(p=>
         p.name.toLowerCase().includes(v) && !guesses.includes(p.name)
       );
-      if(!m.length){sugg.style.display='none';return;}
+      if(!m.length){ sBox.style.display='none'; return; }
       m.forEach(p=>{
-        const d = document.createElement('div'); d.className='suggestion';
+        const d=document.createElement('div');
+        d.className='suggestion';
         d.innerHTML=`<img src="${p.imageUrl||placeholder}"><span>${p.name}</span>`;
-        d.onclick=()=>{ input.value=p.name; sugg.style.display='none'; input.focus(); };
-        sugg.appendChild(d);
+        d.onclick=()=>{ iGuess.value=p.name; sBox.style.display='none'; iGuess.focus(); };
+        sBox.appendChild(d);
       });
-      sugg.style.display='block';
+      sBox.style.display='block';
     });
-    input.addEventListener('blur',()=>setTimeout(()=>sugg.style.display='none',100));
+    iGuess.addEventListener('blur',()=>setTimeout(()=>sBox.style.display='none',100));
 
-    function processGuess(name,restoring=false){
+    function processGuess(name, restoring=false){
       const g = people.find(p=>p.name.toLowerCase()===name.toLowerCase());
       if(!g){
         if(!restoring && name==='holytemuskibidi'){
-          localStorage.clear();location.reload();
+          localStorage.clear(); location.reload();
         }
         return;
       }
@@ -262,7 +275,7 @@
 
       if(!restoring){
         guesses.unshift(g.name);
-        localStorage.setItem(keys.guesses, JSON.stringify(guesses));
+        localStorage.setItem(KEYS.G, JSON.stringify(guesses));
       }
 
       const tr=document.createElement('tr');
@@ -275,7 +288,7 @@
       };
       const catC=(v,s)=>{
         if(s==='Unknown') return cell(`${v} ↓`,'yellow');
-        if(v===s) return cell(v,'green');
+        if(v===s)        return cell(v,'green');
         return cell(v,'gray');
       };
 
@@ -287,52 +300,55 @@
       tr.appendChild(catC(g.gender,     secret.gender));
       tr.appendChild(catC(g.eyeColor,   secret.eyeColor));
 
-      tbody.insertBefore(tr,tbody.firstChild);
+      tbody.insertBefore(tr, tbody.firstChild);
 
-      if(!restoring && secret.residence!=='Unknown' && hintCount>0){
-        hintCount--; localStorage.setItem(keys.hint,hintCount);
+      if(!restoring && secret.residence!=='Unknown' && hintCnt>0){
+        hintCnt--; localStorage.setItem(KEYS.H,hintCnt);
         updateHint();
       }
 
       if(g.name===secret.name && !wonToday){
-        wonToday=true; localStorage.setItem(keys.won,'true');
-        totalWins++; localStorage.setItem(keys.total,totalWins);
-        winTotal.textContent=totalWins;
+        wonToday=true; localStorage.setItem(KEYS.W,'true');
+        totalWins++; localStorage.setItem(KEYS.T,totalWins);
+        wTotal.textContent=totalWins;
         showWin(g.name,g.imageUrl,guesses.length);
       }
     }
 
     function submitGuess(){
-      const n=input.value.trim();
+      const n = iGuess.value.trim();
       if(!n) return;
       processGuess(n,false);
-      input.value=''; input.focus();
+      iGuess.value=''; iGuess.focus();
     }
-    btn.onclick=submitGuess;
-    input.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
+    bGuess.onclick=submitGuess;
+    iGuess.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
 
     function updateHint(){
-      if(hintCount>0){
-        hintBox.classList.remove('active');
-        hintBox.innerHTML=`Residence hint in ${hintCount} guesses`;
+      if(hintCnt>0){
+        hBox.classList.remove('active');
+        hBox.innerHTML=`Residence hint in <b>${hintCnt}</b> guesses`;
       } else {
-        hintBox.classList.add('active');
-        hintBox.textContent='Show Hint';
+        hBox.classList.add('active');
+        hBox.textContent='Show Hint';
       }
     }
-    hintBox.onclick=()=>{
-      if(hintCount===0){
-        hintBox.style.display='none';
-        hintReveal.textContent='Residence: '+secret.residence;
+    hBox.onclick=()=>{
+      if(hintCnt===0){
+        hBox.style.display='none';
+        hReveal.textContent='Residence: '+secret.residence;
       }
     };
 
-    function showWin(n,img,c){
-      winName.textContent=n; winPhoto.src=img||placeholder; winCount.textContent=c;
-      winOverlay.classList.add('show');
-      input.disabled=true; btn.disabled=true;
+    function showWin(n,img,count){
+      wName.textContent=n; wPhoto.src=img||placeholder; wCount.textContent=count;
+      wOverlay.classList.add('show');
+      iGuess.disabled=true; bGuess.disabled=true;
     }
-    winClose.onclick=()=>{ winOverlay.classList.remove('show'); input.disabled=false; btn.disabled=false; };
+    wClose.onclick=()=>{
+      wOverlay.classList.remove('show');
+      // inputs remain disabled until next day
+    };
 
     function cell(html,cls){
       const td=document.createElement('td');
