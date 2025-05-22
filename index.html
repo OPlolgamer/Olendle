@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Person-Guessle</title>
+  <meta charset="UTF-8" />
+  <title>Olendle by OPlolgamer</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    input, button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin: 0.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+    }
     .green { background: #88e88c; }
     .yellow { background: #fef08a; }
     .gray  { background: #ddd; color: #666; }
@@ -14,7 +32,7 @@
   </style>
 </head>
 <body>
-  <h1>Person-Guessle</h1>
+  <h1>Olendle by OPlolgamer</h1>
   <p>Guess the mystery person!</p>
   <input type="text" id="guessInput" placeholder="Type a name…" />
   <button id="guessBtn">Guess</button>
@@ -32,24 +50,73 @@
   </table>
 
   <script>
-    // 🔢 Your data
+    // 1) Your roster of people (add more as you like)
     const people = [
-      {name: 'Alice', birthYear: 1990, height: 1.65, hairColor: 'Brown'},
-      {name: 'Bob',   birthYear: 1985, height: 1.80, hairColor: 'Blonde'},
-      {name: 'Carol', birthYear: 1992, height: 1.70, hairColor: 'Black'},
-      // …add more entries here
+      { name: 'Alice', birthYear: 1990, height: 1.65, hairColor: 'Brown' },
+      { name: 'Bob',   birthYear: 1985, height: 1.80, hairColor: 'Blonde' },
+      { name: 'Carol', birthYear: 1992, height: 1.70, hairColor: 'Black' },
+      // …etc.
     ];
 
-    // —— SNIPPET START: daily index logic ——
+    // 2) Daily secret logic
     const MS_PER_DAY = 24 * 60 * 60 * 1000;
     const dayCount = Math.floor(Date.now() / MS_PER_DAY);
-    const index   = dayCount % people.length;
-    const secret  = people[index];
-    // —— SNIPPET END ——
+    const secretIndex = dayCount % people.length;
+    const secret = people[secretIndex];
 
+    // 3) DOM references
     const tbody = document.querySelector('#board tbody');
-    document.getElementById('guessBtn').onclick = () => {
-      const name = document.getElementById('guessInput').value.trim();
+    const guessInput = document.getElementById('guessInput');
+    const guessBtn   = document.getElementById('guessBtn');
+
+    // 4) On each guess:
+    guessBtn.addEventListener('click', () => {
+      const name = guessInput.value.trim();
       const guess = people.find(p => p.name.toLowerCase() === name.toLowerCase());
+
       if (!guess) {
-        alert('Unknown name! Try one
+        alert('Unknown name! Make sure it’s exactly one from your list.');
+        return;
+      }
+
+      const tr = document.createElement('tr');
+      tr.appendChild(makeCell(guess.name, 'gray'));
+
+      // Birth Year (numeric)
+      if (guess.birthYear === secret.birthYear) {
+        tr.appendChild(makeCell(guess.birthYear, 'green'));
+      } else {
+        const dir = guess.birthYear < secret.birthYear ? '↑' : '↓';
+        tr.appendChild(makeCell(`${guess.birthYear} <span class="arrow">${dir}</span>`, 'yellow'));
+      }
+
+      // Height (numeric)
+      if (guess.height === secret.height) {
+        tr.appendChild(makeCell(guess.height.toFixed(2), 'green'));
+      } else {
+        const dir = guess.height < secret.height ? '↑' : '↓';
+        tr.appendChild(makeCell(`${guess.height.toFixed(2)} <span class="arrow">${dir}</span>`, 'yellow'));
+      }
+
+      // Hair Color (categorical)
+      if (guess.hairColor.toLowerCase() === secret.hairColor.toLowerCase()) {
+        tr.appendChild(makeCell(guess.hairColor, 'green'));
+      } else {
+        tr.appendChild(makeCell(guess.hairColor, 'gray'));
+      }
+
+      tbody.appendChild(tr);
+      guessInput.value = '';
+      guessInput.focus();
+    });
+
+    // helper to create a cell
+    function makeCell(html, cls) {
+      const td = document.createElement('td');
+      td.className = cls;
+      td.innerHTML = html;
+      return td;
+    }
+  </script>
+</body>
+</html>
