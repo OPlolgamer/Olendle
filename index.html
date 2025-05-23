@@ -70,8 +70,9 @@
       width:60%; margin:1rem auto; padding:.5rem 1rem;
       background:rgba(200,200,200,0.4); color:#000;
       border-radius:4px; cursor:pointer;
+      transition: background .3s, color .3s;
     }
-    #hintBox.disabled { opacity:.6; cursor:default; }
+    #hintBox.disabled { cursor:default; }
 
     .table-wrapper { overflow-x:auto; margin-top:1rem; }
     table {
@@ -146,8 +147,8 @@
       <table id="board">
         <thead>
           <tr>
-            <th></th><th>Name</th><th>Birth Year</th><th>Height</th>
-            <th>Residence</th><th>Hair Color</th><th>Gender</th><th>Eye Color</th>
+            <th></th><th>Name</th><th>Birth&nbsp;Year</th><th>Height</th>
+            <th>Residence</th><th>Hair&nbsp;Color</th><th>Gender</th><th>Eye&nbsp;Color</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -167,9 +168,8 @@
 
   <script>
     function osloNow(){
-      return new Date(
-        new Date().toLocaleString("en-US",{timeZone:"Europe/Oslo"})
-      );
+      return new Date(new Date()
+        .toLocaleString("en-US",{timeZone:"Europe/Oslo"}));
     }
     const DAY_MS=24*60*60*1000,
           KEYS={
@@ -189,23 +189,22 @@
       {name:'Sina',birthYear:2007,height:175,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'F',imageUrl:'Sina.jpg'}
     ];
 
-    // DOM
     const modeToggle=document.getElementById('modeToggle'),
-          resetFree= document.getElementById('resetFree'),
-          modeLabel=document.getElementById('modeLabel'),
-          winTotal=  document.getElementById('winTotal'),
-          winTitle=  document.getElementById('winTitle'),
+          resetFree =document.getElementById('resetFree'),
+          modeLabel =document.getElementById('modeLabel'),
+          winTotal  =document.getElementById('winTotal'),
+          winTitle  =document.getElementById('winTitle'),
           guessInput=document.getElementById('guessInput'),
-          guessBtn=  document.getElementById('guessBtn'),
-          suggBox=   document.getElementById('suggestions'),
-          tbody=     document.querySelector('#board tbody'),
-          hintBox=   document.getElementById('hintBox'),
-          hintCountElem=hintBox.querySelector('span'),
+          guessBtn  =document.getElementById('guessBtn'),
+          suggBox   =document.getElementById('suggestions'),
+          tbody     =document.querySelector('#board tbody'),
+          hintBox   =document.getElementById('hintBox'),
+          hintCountElem=document.getElementById('hintCount'),
           winOverlay=document.getElementById('winOverlay'),
-          winClose=  document.getElementById('winClose'),
-          winName=   document.getElementById('winName'),
-          winPhoto=  document.getElementById('winPhoto'),
-          winCount=  document.getElementById('winCount');
+          winClose  =document.getElementById('winClose'),
+          winName   =document.getElementById('winName'),
+          winPhoto  =document.getElementById('winPhoto'),
+          winCount  =document.getElementById('winCount');
 
     let mode='daily',today,guesses, hintCount, hintRevealed, won, total, secretIdx, secret;
 
@@ -223,15 +222,13 @@
     function initState(){
       const nowDay=Math.floor(osloNow().getTime()/DAY_MS),
             k=KEYS[mode];
-      // daily auto-reset
       if(mode==='daily'&&parseInt(localStorage.getItem(k.day),10)!==nowDay){
-        localStorage.setItem(k.day, nowDay);
+        localStorage.setItem(k.day,nowDay);
         localStorage.setItem(k.g,'[]');
         localStorage.setItem(k.h,'5');
         localStorage.removeItem(k.r);
         localStorage.removeItem(k.w);
       }
-      // freeplay secret persist
       if(mode==='free'){
         let idx=parseInt(localStorage.getItem(k.day),10);
         if(isNaN(idx)){
@@ -241,12 +238,12 @@
         secretIdx=idx;
       } else secretIdx=nowDay%people.length;
 
-      guesses       =JSON.parse(localStorage.getItem(k.g))||[];
-      hintCount     =parseInt(localStorage.getItem(k.h),10)||5;
-      hintRevealed  =localStorage.getItem(k.r)==='true';
-      won           =localStorage.getItem(k.w)==='true';
-      total         =parseInt(localStorage.getItem(k.t),10)||0;
-      secret        =people[secretIdx];
+      guesses      =JSON.parse(localStorage.getItem(k.g))||[];
+      hintCount    =parseInt(localStorage.getItem(k.h),10)||5;
+      hintRevealed =localStorage.getItem(k.r)==='true';
+      won          =localStorage.getItem(k.w)==='true';
+      total        =parseInt(localStorage.getItem(k.t),10)||0;
+      secret       =people[secretIdx];
 
       winTotal.textContent=total;
       guessInput.disabled =won;
@@ -257,16 +254,16 @@
         hintBox.classList.add('disabled');
       } else {
         hintCountElem.textContent=hintCount;
-        hintBox.innerHTML=`Residence hint in <span>${hintCount}</span> guesses`;
+        hintBox.innerHTML=`Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
         hintBox.classList.remove('disabled');
       }
     }
 
     function saveState(){
       const k=KEYS[mode];
-      localStorage.setItem(k.g, JSON.stringify(guesses));
-      localStorage.setItem(k.h, hintCount);
-      localStorage.setItem(k.t, total);
+      localStorage.setItem(k.g,JSON.stringify(guesses));
+      localStorage.setItem(k.h,hintCount);
+      localStorage.setItem(k.t,total);
       if(hintRevealed) localStorage.setItem(k.r,'true');
       if(won)           localStorage.setItem(k.w,'true');
     }
@@ -288,57 +285,46 @@
         if(!p) return;
         const tr=document.createElement('tr');
         if(p===secret) tr.classList.add('winner-row');
-        const mk=txt=>{
+
+        const mk=(txt,cls='')=>{
           const td=document.createElement('td');
           td.textContent=txt;
+          if(cls) td.classList.add(cls);
           return td;
         };
-        // photo
+
         const tdImg=mk('');
         tdImg.innerHTML=`<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
         tr.appendChild(tdImg);
 
-        // name
         const tdName=mk(p.name);
         if(p===secret) tdName.classList.add('green');
         tr.appendChild(tdName);
 
-        // birthYear
-        const clrBy=p.birthYear===secret.birthYear?'green':'wrong';
-        const tdBy=mk(compareNum(p.birthYear,secret.birthYear));
-        tdBy.classList.add(clrBy);
+        const tdBy=mk(compareNum(p.birthYear,secret.birthYear),
+                       p.birthYear===secret.birthYear?'green':'wrong');
         tr.appendChild(tdBy);
 
-        // height
-        const clrHt=p.height===secret.height?'green':'wrong';
-        const tdHt=mk(compareNum(p.height,secret.height));
-        tdHt.classList.add(clrHt);
+        const tdHt=mk(compareNum(p.height,secret.height),
+                       p.height===secret.height?'green':'wrong');
         tr.appendChild(tdHt);
 
-        // residence
-        let clrRes='wrong';
-        if(p.residence===secret.residence) clrRes='green';
-        else if(secret.residence==='Unknown') clrRes='yellow';
-        const tdRes=mk(compareCat(p.residence,secret.residence));
-        tdRes.classList.add(clrRes);
+        let cls= p.residence===secret.residence?'green'
+                :secret.residence==='Unknown'?'yellow'
+                :'wrong';
+        const tdRes=mk(compareCat(p.residence,secret.residence),cls);
         tr.appendChild(tdRes);
 
-        // hairColor
-        const clrHc=p.hairColor===secret.hairColor?'green':'wrong';
-        const tdHc=mk(compareCat(p.hairColor,secret.hairColor));
-        tdHc.classList.add(clrHc);
+        const tdHc=mk(compareCat(p.hairColor,secret.hairColor),
+                       p.hairColor===secret.hairColor?'green':'wrong');
         tr.appendChild(tdHc);
 
-        // gender
-        const clrG=p.gender===secret.gender?'green':'wrong';
-        const tdG=mk(compareCat(p.gender,secret.gender));
-        tdG.classList.add(clrG);
+        const tdG=mk(compareCat(p.gender,secret.gender),
+                       p.gender===secret.gender?'green':'wrong');
         tr.appendChild(tdG);
 
-        // eyeColor
-        const clrE=p.eyeColor===secret.eyeColor?'green':'wrong';
-        const tdE=mk(compareCat(p.eyeColor,secret.eyeColor));
-        tdE.classList.add(clrE);
+        const tdE=mk(compareCat(p.eyeColor,secret.eyeColor),
+                       p.eyeColor===secret.eyeColor?'green':'wrong');
         tr.appendChild(tdE);
 
         tbody.appendChild(tr);
@@ -355,8 +341,8 @@
       renderRows();
       updateHint();
       if(p===secret) showWin(p.name,p.imageUrl,guesses.length);
-      guessInput.disabled =won;
-      guessBtn.disabled   =won;
+      guessInput.disabled=won;
+      guessBtn.disabled=won;
     }
 
     function submitGuess(){
@@ -365,11 +351,11 @@
       processGuess(v);
       guessInput.value=''; guessInput.focus();
     }
-    guessBtn.addEventListener('click', submitGuess);
-    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
+    guessBtn.addEventListener('click',submitGuess);
+    guessInput.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
 
-    // autocomplete with includes
-    guessInput.addEventListener('input', ()=>{
+    // Autocomplete with includes
+    guessInput.addEventListener('input',()=>{
       const v=guessInput.value.trim().toLowerCase();
       suggBox.innerHTML='';
       if(!v){ suggBox.style.display='none'; return; }
@@ -390,36 +376,44 @@
       });
       suggBox.style.display='block';
     });
-    guessInput.addEventListener('blur', ()=>setTimeout(()=>suggBox.style.display='none',100));
+    guessInput.addEventListener('blur',()=>setTimeout(()=>suggBox.style.display='none',100));
 
-    /* Hint */
     function updateHint(){
       if(!hintRevealed){
-        hintCountElem.textContent=hintCount;
-        hintBox.textContent=`Residence hint in ${hintCount} guesses`;
-        hintBox.classList.remove('disabled');
+        if(hintCount>0){
+          hintCountElem.textContent=hintCount;
+          hintBox.innerHTML=`Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
+          hintBox.style.background='rgba(200,200,200,0.4)';
+          hintBox.style.color='#000';
+          hintBox.classList.remove('disabled');
+        } else {
+          hintBox.textContent='Show Hint';
+          hintBox.style.background='#fff';
+          hintBox.style.color='#000';
+          hintBox.classList.add('disabled');
+        }
       }
     }
-    hintBox.addEventListener('click', ()=>{
+    hintBox.addEventListener('click',()=>{
       if(hintCount===0 && !hintRevealed){
         hintRevealed=true;
         hintBox.textContent='Residence: '+secret.residence;
+        hintBox.style.background='#fff';
+        hintBox.style.color='#000';
         hintBox.classList.add('disabled');
         saveState();
       }
     });
 
-    /* Win overlay */
     function showWin(name,img,count){
       winName.textContent=name;
       winPhoto.src=img||'no-image.png';
       winCount.textContent=count;
       winOverlay.classList.add('show');
     }
-    winClose.addEventListener('click', ()=>winOverlay.classList.remove('show'));
+    winClose.addEventListener('click',()=>winOverlay.classList.remove('show'));
 
-    /* Mode switch */
-    modeToggle.addEventListener('click', ()=>{
+    modeToggle.addEventListener('click',()=>{
       mode=mode==='daily'?'free':'daily';
       applyModeUI();
       initState();
@@ -427,8 +421,7 @@
       updateHint();
     });
 
-    /* Freeplay reset */
-    resetFree.addEventListener('click', ()=>{
+    resetFree.addEventListener('click',()=>{
       if(mode==='free'){
         const k=KEYS.free;
         localStorage.setItem(k.g,'[]');
@@ -442,7 +435,6 @@
       }
     });
 
-    /* Bootstrap */
     applyModeUI();
     initState();
     renderRows();
