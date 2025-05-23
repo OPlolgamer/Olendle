@@ -5,14 +5,17 @@
   <title>Ølendle</title>
   <style>
     html, body { height:100%; margin:0; font-family:sans-serif; color:#fff; text-align:center;
-      background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
-                  url('background.jpg') center/cover no-repeat;
+      background:
+        linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+        url('background.jpg') center/cover no-repeat;
       background-size: cover;
     }
     main { position:relative; max-width:900px; margin:2rem auto;
-           background:rgba(255,255,255,0.1); padding:1rem; border-radius:8px; }
-    #modeToggle,#resetFree { position:absolute; top:1rem; padding:.5rem 1rem;
-                             border:none; border-radius:4px; cursor:pointer; font-size:.9rem; }
+      background:rgba(255,255,255,0.1); padding:1rem; border-radius:8px;
+    }
+    #modeToggle, #resetFree { position:absolute; top:1rem; padding:.5rem 1rem;
+      border:none; border-radius:4px; cursor:pointer; font-size:.9rem;
+    }
     #modeToggle.daily { right:1rem; background:#9c27b0; color:#fff; }
     #modeToggle.free  { right:1rem; background:#4caf50; color:#fff; }
     #resetFree { left:1rem; background:#ffeb3b; color:#000; display:none; }
@@ -25,52 +28,51 @@
 
     .input-group { display:flex; width:60%; margin:0 auto; position:relative; }
     #guessInput { flex:1; padding:.75rem; font-size:1rem; border:none;
-                  border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2); color:#fff; }
+      border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2); color:#fff;
+    }
     #guessBtn { padding:0 1rem; font-size:1rem; border:none;
-                border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2);
-                color:#fff; cursor:pointer; }
+      border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2);
+      color:#fff; cursor:pointer;
+    }
     #guessBtn:disabled { opacity:.5; cursor:not-allowed; }
 
     #suggestions { position:absolute; top:100%; left:0; width:100%; max-height:200px;
-                   overflow-y:auto; background:#fff; color:#000; border-radius:4px;
-                   display:none; z-index:10; }
+      overflow-y:auto; background:#fff; color:#000; border-radius:4px; display:none; z-index:10;
+    }
     .suggestion { display:flex; align-items:center; padding:.25rem; cursor:pointer; }
-    .suggestion img { width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:.5rem; }
+    .suggestion img { width:40px; height:40px; object-fit:cover; border-radius:50%; margin-right:.5rem; }
     .suggestion:hover { background:#eee; }
 
     #hintBox { width:60%; margin:1rem auto; padding:.5rem 1rem; border-radius:4px;
-               cursor:pointer; transition:background .3s,color .3s; }
+      cursor:pointer; transition:background .3s,color .3s;
+    }
     #hintBox.locked { cursor:default; }
 
     .table-wrapper { overflow-x:auto; margin-top:1rem; }
     table { width:100%; min-width:700px; border-collapse:collapse; background:rgba(255,255,255,0.1); }
     th, td { padding:.5rem; white-space:nowrap; border:1px solid rgba(255,255,255,0.3);
-             color:#fff; background:rgba(255,255,255,0.1); }
+      color:#fff; background:rgba(255,255,255,0.1);
+    }
     th { background:rgba(255,255,255,0.2); }
     .green { background:rgba(136,232,140,0.7)!important; }
     .yellow { background:rgba(254,240,138,0.7)!important; color:#333; }
     .wrong { background:rgba(240,100,100,0.7)!important; }
     .winner-row td { background:rgba(136,232,140,0.7)!important; }
 
-    img.person-photo { width:60px;height:60px;object-fit:cover;border-radius:50%;
-                       background:rgba(255,255,255,0.2); }
+    img.person-photo { width:60px; height:60px; object-fit:cover; border-radius:50%; background:rgba(255,255,255,0.2); }
     @media(max-width:600px){
       .input-group,#hintBox { width:100%; }
       table { min-width:500px; }
-      img.person-photo { width:50px;height:50px; }
+      img.person-photo { width:50px; height:50px; }
     }
 
-    #winOverlay { position:fixed; top:0; left:0; right:0; bottom:0;
-                  background:rgba(0,0,0,0.8); display:flex; align-items:center;
-                  justify-content:center; opacity:0; pointer-events:none;
-                  transition:opacity .5s; }
+    #winOverlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8);
+      display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .5s;
+    }
     #winOverlay.show { opacity:1; pointer-events:auto; }
-    #winContent { position:relative; background:rgba(50,50,50,0.95);
-                  padding:2rem; border-radius:8px; text-align:center; max-width:90%; }
-    #winClose { position:absolute; top:8px; right:12px; font-size:1.5rem;
-                cursor:pointer; color:#fff; }
-    #winContent img { width:150px;height:150px;object-fit:cover;
-                      border:2px solid #fff;border-radius:50%; }
+    #winContent { position:relative; background:rgba(50,50,50,0.95); padding:2rem; border-radius:8px; text-align:center; max-width:90%; }
+    #winClose { position:absolute; top:8px; right:12px; font-size:1.5rem; cursor:pointer; color:#fff; }
+    #winContent img { width:150px; height:150px; object-fit:cover; border:2px solid #fff; border-radius:50%; }
     #winContent h2{ margin:1rem 0; font-size:1.5rem; } #winContent p{ margin-top:.5rem; font-size:1.2rem; }
   </style>
 </head>
@@ -94,35 +96,34 @@
 
     <div class="table-wrapper">
       <table id="board">
-        <thead><tr>
-          <th></th><th>Name</th><th>Birth&nbsp;Year</th><th>Height</th>
-          <th>Residence</th><th>Hair&nbsp;Color</th><th>Gender</th><th>Eye&nbsp;Color</th>
-        </tr></thead>
+        <thead>
+          <tr>
+            <th></th><th>Name</th><th>Birth&nbsp;Year</th><th>Height</th>
+            <th>Residence</th><th>Hair&nbsp;Color</th><th>Gender</th><th>Eye&nbsp;Color</th>
+          </tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
   </main>
 
-  <div id="winOverlay"><div id="winContent">
-    <div id="winClose">×</div>
-    <h2 id="winTitle"></h2>
-    <h2><span id="winName"></span></h2>
-    <img id="winPhoto" src="" alt="">
-    <p>You got it in <span id="winCount"></span> guesses!</p>
-  </div></div>
+  <div id="winOverlay">
+    <div id="winContent">
+      <div id="winClose">×</div>
+      <h2 id="winTitle"></h2>
+      <h2><span id="winName"></span></h2>
+      <img id="winPhoto" src="" alt="">
+      <p>You got it in <span id="winCount"></span> guesses!</p>
+    </div>
+  </div>
 
   <script>
-    function osloNow(){
-      return new Date(new Date()
-        .toLocaleString("en-US",{timeZone:"Europe/Oslo"}));
-    }
-
+    function osloNow(){ return new Date(new Date().toLocaleString("en-US",{ timeZone:"Europe/Oslo" })); }
     const DAY_MS = 24*60*60*1000;
-    const KEYS = {
-      daily:{ day:'day-d',    g:'g-d',   h:'h-d',   unlocked:'unlocked-d',  revoked:'revealed-d', w:'w-d', t:'t-d' },
-      free: { day:'free-secret',g:'g-f', h:'h-f',   unlocked:'unlocked-f', revoked:'revealed-f', w:'w-f', t:'t-f' }
+    const KEYS   = {
+      daily:{ day:'day-d', g:'g-d', h:'h-d', unlocked:'unlocked-d', revealed:'revealed-d', w:'w-d', t:'t-d' },
+      free: { day:'free-secret', g:'g-f', h:'h-f', unlocked:'unlocked-f', revealed:'revealed-f', w:'w-f', t:'t-f' }
     };
-
     const people = [
       {name:'Morten',birthYear:2008,height:182,residence:'Ølen',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Morten.jpeg'},
       {name:'Thomas Andre',birthYear:2008,height:190,residence:'Ølensvåg',hairColor:'Brown',eyeColor:'Brown',gender:'M',imageUrl:'Thomas_Andre.jpg'},
@@ -135,7 +136,7 @@
       {name:'Sina',birthYear:2007,height:175,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'F',imageUrl:'Sina.jpg'}
     ];
 
-    // DOM
+    // DOM refs
     const modeToggle = document.getElementById('modeToggle'),
           resetFree  = document.getElementById('resetFree'),
           modeLabel  = document.getElementById('modeLabel'),
@@ -152,86 +153,79 @@
           winPhoto   = document.getElementById('winPhoto'),
           winCount   = document.getElementById('winCount');
 
-    let mode='daily',
-        guesses,
-        hintCount,
-        unlocked,
-        revoked,
-        won,
-        total,
-        secretIdx,
-        secret;
+    let mode='daily', guesses, hintCount, hintUnlocked, hintRevealed, won, total, secretIdx, secret;
 
     function applyModeUI(){
       modeToggle.textContent = mode==='daily'?'Freeplay':'Daily';
       modeToggle.className   = mode;
       modeLabel.textContent  = mode==='daily'?'Daily':'Freeplay';
       modeLabel.className    = 'mode '+mode;
-      winTitle.textContent   = mode==='daily'
-                                  ? "Today's Ølendle Was…"
-                                  : "Ølendle Was…";
-      resetFree.style.display = mode==='free'?'block':'none';
+      winTitle.textContent   = mode==='daily'?"Today's Ølendle Was…":"Ølendle Was…";
+      resetFree.style.display= mode==='free'?'block':'none';
     }
 
     function initState(){
-      const nowDay = Math.floor(osloNow().getTime()/DAY_MS),
-            k      = KEYS[mode];
+      const nowDay=Math.floor(osloNow().getTime()/DAY_MS),
+            k     = KEYS[mode];
 
-      // reset daily once per day
-      if(mode==='daily'&&parseInt(localStorage.getItem(k.day),10)!==nowDay){
-        localStorage.setItem(k.day, nowDay);
-        localStorage.setItem(k.g, '[]');
-        localStorage.setItem(k.h, '5');
+      // Daily auto-reset
+      if(mode==='daily' && parseInt(localStorage.getItem(k.day),10)!==nowDay){
+        localStorage.setItem(k.day,nowDay);
+        localStorage.setItem(k.g,'[]');
+        localStorage.setItem(k.h,'5');
         localStorage.removeItem(k.unlocked);
-        localStorage.removeItem(k.revoked);
+        localStorage.removeItem(k.revealed);
         localStorage.removeItem(k.w);
       }
 
-      // freeplay secret
+      // Freeplay secret persist
       if(mode==='free'){
-        let idx = parseInt(localStorage.getItem(k.day),10);
+        let idx=parseInt(localStorage.getItem(k.day),10);
         if(isNaN(idx)){
-          idx = Math.floor(Math.random()*people.length);
-          localStorage.setItem(k.day, idx);
+          idx=Math.floor(Math.random()*people.length);
+          localStorage.setItem(k.day,idx);
         }
-        secretIdx = idx;
+        secretIdx=idx;
       } else {
-        secretIdx = nowDay % people.length;
+        secretIdx=nowDay%people.length;
       }
-      secret = people[secretIdx];
+      secret=people[secretIdx];
 
-      guesses    = JSON.parse(localStorage.getItem(k.g))||[];
-      hintCount  = parseInt(localStorage.getItem(k.h),10)||5;
-      unlocked   = localStorage.getItem(k.unlocked)==='true';
-      revoked    = localStorage.getItem(k.revoked)==='true';
-      won        = localStorage.getItem(k.w)==='true';
-      total      = parseInt(localStorage.getItem(k.t),10)||0;
+      guesses      = JSON.parse(localStorage.getItem(k.g))||[];
+      hintCount    = parseInt(localStorage.getItem(k.h),10)||5;
+      hintUnlocked = localStorage.getItem(k.unlocked)==='true';
+      hintRevealed = localStorage.getItem(k.revealed)==='true';
+      won          = localStorage.getItem(k.w)==='true';
+      total        = parseInt(localStorage.getItem(k.t),10)||0;
 
-      winTotal.textContent = total;
-      guessInput.disabled  = won;
-      guessBtn.disabled    = won;
+      winTotal.textContent=total;
+      guessInput.disabled = won;
+      guessBtn.disabled   = won;
 
-      // ALWAYS lock in "SHOW HINT" once count===0
-      if(!unlocked && hintCount===0){
-        unlocked = true;
+      // Unlock as soon as you hit zero guesses
+      if(hintCount<=0 && !hintUnlocked){
+        hintUnlocked=true;
         localStorage.setItem(k.unlocked,'true');
       }
 
-      // draw hint button state
-      if(revoked){
-        hintBox.textContent      = 'Residence: ' + secret.residence;
+      // Draw hint button:
+      if(hintRevealed){
+        // Already clicked through
+        hintBox.textContent      = 'Residence: '+secret.residence;
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('locked');
       }
-      else if(unlocked){
+      else if(hintUnlocked){
+        // Zero guesses reached → Show Hint
         hintBox.textContent      = 'Show Hint';
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('locked');
       }
       else {
-        hintBox.textContent      = 'Residence hint in ' + hintCount + ' guesses';
+        // Still counting down
+        hintBox.textContent      = 'Residence hint in '+hintCount+' guesses';
         hintBox.style.background = 'rgba(200,200,200,0.4)';
         hintBox.style.color      = '#000';
         hintBox.classList.remove('locked');
@@ -243,9 +237,9 @@
       localStorage.setItem(k.g, JSON.stringify(guesses));
       localStorage.setItem(k.h, hintCount);
       localStorage.setItem(k.t, total);
-      localStorage.setItem(k.unlocked, unlocked?'true':'false');
-      if(revoked) localStorage.setItem(k.revoked,'true');
-      if(won)      localStorage.setItem(k.w,'true');
+      localStorage.setItem(k.unlocked, hintUnlocked?'true':'false');
+      if(hintRevealed) localStorage.setItem(k.revealed,'true');
+      if(won)           localStorage.setItem(k.w,'true');
     }
 
     function compareNum(v,s){ if(s===0) return v+' ↓'; if(v===s) return v; return v+' '+(v<s?'↑':'↓'); }
@@ -254,31 +248,34 @@
     function renderRows(){
       tbody.innerHTML='';
       guesses.forEach(name=>{
-        const p = people.find(x=>x.name===name);
+        const p=people.find(x=>x.name===name);
         if(!p) return;
         const tr=document.createElement('tr');
         if(p===secret) tr.classList.add('winner-row');
 
-        const mk=(t,c='')=>{
+        function mk(txt,cls=''){
           const td=document.createElement('td');
-          td.textContent=t;
-          if(c) td.classList.add(c);
+          td.textContent=txt;
+          if(cls) td.classList.add(cls);
           return td;
-        };
+        }
 
-        const tdImg = mk('');
-        tdImg.innerHTML = `<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
+        // photo
+        const tdImg=mk('');
+        tdImg.innerHTML=`<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
         tr.appendChild(tdImg);
 
-        tr.appendChild(mk(p.name, p===secret?'green':''));
+        tr.appendChild(mk(p.name,p===secret?'green':''));
         tr.appendChild(mk(compareNum(p.birthYear,secret.birthYear),
                          p.birthYear===secret.birthYear?'green':'wrong'));
         tr.appendChild(mk(compareNum(p.height,secret.height),
                          p.height===secret.height?'green':'wrong'));
+
         let cls = p.residence===secret.residence?'green'
-                : unlocked?'yellow'
+                : hintUnlocked                               ?'yellow'
                 :'wrong';
-        tr.appendChild(mk(compareCat(p.residence,secret.residence), cls));
+        tr.appendChild(mk(compareCat(p.residence,secret.residence),cls));
+
         tr.appendChild(mk(compareCat(p.hairColor,secret.hairColor),
                          p.hairColor===secret.hairColor?'green':'wrong'));
         tr.appendChild(mk(compareCat(p.gender,secret.gender),
@@ -291,7 +288,7 @@
     }
 
     function processGuess(v){
-      const p = people.find(x=>x.name.toLowerCase()===v.toLowerCase());
+      const p=people.find(x=>x.name.toLowerCase()===v.toLowerCase());
       if(!p||guesses.includes(p.name)) return;
       guesses.unshift(p.name);
       if(secret.residence!=='Unknown'&&hintCount>0) hintCount--;
@@ -300,19 +297,18 @@
       renderRows();
       updateHint();
       if(p===secret) showWin(p.name,p.imageUrl,guesses.length);
-      guessInput.disabled = won;
-      guessBtn.disabled   = won;
+      guessInput.disabled=won; guessBtn.disabled=won;
     }
     function submitGuess(){ const v=guessInput.value.trim(); if(!v) return; processGuess(v); guessInput.value=''; guessInput.focus(); }
-    guessBtn.addEventListener('click', submitGuess);
-    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
+    guessBtn.addEventListener('click',submitGuess);
+    guessInput.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
 
-    // autocomplete
+    // Autocomplete
     guessInput.addEventListener('input',()=>{
       const v=guessInput.value.trim().toLowerCase();
       suggBox.innerHTML='';
       if(!v){ suggBox.style.display='none'; return; }
-      const matches = people
+      const matches=people
         .filter(x=>x.name.toLowerCase().includes(v))
         .filter(x=>!guesses.includes(x.name));
       if(!matches.length){ suggBox.style.display='none'; return; }
@@ -332,20 +328,20 @@
     guessInput.addEventListener('blur',()=>setTimeout(()=>suggBox.style.display='none',100));
 
     function updateHint(){
-      if(!revoked && unlocked && hintCount>0===false){
-        // count→Show Hint transition
+      // only need to update countdown→Show Hint
+      if(!hintRevealed && hintUnlocked && hintCount>0===false){
         hintBox.textContent      = 'Show Hint';
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('locked');
-      } else if(!revoked && !unlocked){
-        // just update countdown
+      }
+      else if(!hintUnlocked){
         hintBox.textContent = 'Residence hint in '+hintCount+' guesses';
       }
     }
     hintBox.addEventListener('click',()=>{
-      if(!revoked && unlocked){
-        revoked = true;
+      if(hintUnlocked && !hintRevealed){
+        hintRevealed=true;
         hintBox.textContent      = 'Residence: '+secret.residence;
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
@@ -373,14 +369,14 @@
         localStorage.setItem(k.g,'[]');
         localStorage.setItem(k.h,'5');
         localStorage.removeItem(k.unlocked);
-        localStorage.removeItem(k.revoked);
+        localStorage.removeItem(k.revealed);
         localStorage.removeItem(k.w);
         localStorage.removeItem(k.day);
         initState(); renderRows(); updateHint();
       }
     });
 
-    // start
+    // Bootstrap
     applyModeUI();
     initState();
     renderRows();
