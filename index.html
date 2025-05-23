@@ -11,11 +11,9 @@
       background-size: cover;
     }
     main { position:relative; max-width:900px; margin:2rem auto;
-      background:rgba(255,255,255,0.1); padding:1rem; border-radius:8px;
-    }
-    #modeToggle, #resetFree { position:absolute; top:1rem; padding:.5rem 1rem;
-      border:none; border-radius:4px; cursor:pointer; font-size:.9rem;
-    }
+           background:rgba(255,255,255,0.1); padding:1rem; border-radius:8px; }
+    #modeToggle,#resetFree { position:absolute; top:1rem; padding:.5rem 1rem;
+                             border:none; border-radius:4px; cursor:pointer; font-size:.9rem; }
     #modeToggle.daily { right:1rem; background:#9c27b0; color:#fff; }
     #modeToggle.free  { right:1rem; background:#4caf50; color:#fff; }
     #resetFree { left:1rem; background:#ffeb3b; color:#000; display:none; }
@@ -28,51 +26,45 @@
 
     .input-group { display:flex; width:60%; margin:0 auto; position:relative; }
     #guessInput { flex:1; padding:.75rem; font-size:1rem; border:none;
-      border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2); color:#fff;
-    }
+                  border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2); color:#fff; }
     #guessBtn { padding:0 1rem; font-size:1rem; border:none;
-      border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2);
-      color:#fff; cursor:pointer;
-    }
+                border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2); color:#fff; cursor:pointer; }
     #guessBtn:disabled { opacity:.5; cursor:not-allowed; }
 
     #suggestions { position:absolute; top:100%; left:0; width:100%; max-height:200px;
-      overflow-y:auto; background:#fff; color:#000; border-radius:4px; display:none; z-index:10;
-    }
+                   overflow-y:auto; background:#fff; color:#000; border-radius:4px; display:none; z-index:10; }
     .suggestion { display:flex; align-items:center; padding:.25rem; cursor:pointer; }
-    .suggestion img { width:40px; height:40px; object-fit:cover; border-radius:50%; margin-right:.5rem; }
+    .suggestion img { width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:.5rem; }
     .suggestion:hover { background:#eee; }
 
     #hintBox { width:60%; margin:1rem auto; padding:.5rem 1rem; border-radius:4px;
-      cursor:pointer; transition:background .3s,color .3s;
-    }
+               cursor:pointer; transition:background .3s,color .3s; }
     #hintBox.locked { cursor:default; }
 
     .table-wrapper { overflow-x:auto; margin-top:1rem; }
     table { width:100%; min-width:700px; border-collapse:collapse; background:rgba(255,255,255,0.1); }
     th, td { padding:.5rem; white-space:nowrap; border:1px solid rgba(255,255,255,0.3);
-      color:#fff; background:rgba(255,255,255,0.1);
-    }
+             color:#fff; background:rgba(255,255,255,0.1); }
     th { background:rgba(255,255,255,0.2); }
     .green { background:rgba(136,232,140,0.7)!important; }
     .yellow { background:rgba(254,240,138,0.7)!important; color:#333; }
     .wrong { background:rgba(240,100,100,0.7)!important; }
     .winner-row td { background:rgba(136,232,140,0.7)!important; }
 
-    img.person-photo { width:60px; height:60px; object-fit:cover; border-radius:50%; background:rgba(255,255,255,0.2); }
+    img.person-photo { width:60px;height:60px;object-fit:cover;border-radius:50%;
+                       background:rgba(255,255,255,0.2); }
     @media(max-width:600px){
       .input-group,#hintBox { width:100%; }
       table { min-width:500px; }
-      img.person-photo { width:50px; height:50px; }
+      img.person-photo { width:50px;height:50px; }
     }
 
     #winOverlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8);
-      display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .5s;
-    }
+                  display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .5s; }
     #winOverlay.show { opacity:1; pointer-events:auto; }
     #winContent { position:relative; background:rgba(50,50,50,0.95); padding:2rem; border-radius:8px; text-align:center; max-width:90%; }
     #winClose { position:absolute; top:8px; right:12px; font-size:1.5rem; cursor:pointer; color:#fff; }
-    #winContent img { width:150px; height:150px; object-fit:cover; border:2px solid #fff; border-radius:50%; }
+    #winContent img { width:150px;height:150px;object-fit:cover;border-radius:50%;border:2px solid #fff; }
     #winContent h2{ margin:1rem 0; font-size:1.5rem; } #winContent p{ margin-top:.5rem; font-size:1.2rem; }
   </style>
 </head>
@@ -97,10 +89,8 @@
     <div class="table-wrapper">
       <table id="board">
         <thead>
-          <tr>
-            <th></th><th>Name</th><th>Birth&nbsp;Year</th><th>Height</th>
-            <th>Residence</th><th>Hair&nbsp;Color</th><th>Gender</th><th>Eye&nbsp;Color</th>
-          </tr>
+          <tr><th></th><th>Name</th><th>Birth&nbsp;Year</th><th>Height</th>
+              <th>Residence</th><th>Hair&nbsp;Color</th><th>Gender</th><th>Eye&nbsp;Color</th></tr>
         </thead>
         <tbody></tbody>
       </table>
@@ -118,11 +108,13 @@
   </div>
 
   <script>
-    function osloNow(){ return new Date(new Date().toLocaleString("en-US",{ timeZone:"Europe/Oslo" })); }
+    function osloNow(){
+      return new Date(new Date().toLocaleString("en-US",{ timeZone:"Europe/Oslo" }));
+    }
     const DAY_MS = 24*60*60*1000;
     const KEYS   = {
-      daily:{ day:'day-d', g:'g-d', h:'h-d', unlocked:'unlocked-d', revealed:'revealed-d', w:'w-d', t:'t-d' },
-      free: { day:'free-secret', g:'g-f', h:'h-f', unlocked:'unlocked-f', revealed:'revealed-f', w:'w-f', t:'t-f' }
+      daily:{ day:'day-d',    g:'g-d',   h:'h-d',   unlocked:'unlocked-d',   revealed:'revealed-d', w:'w-d', t:'t-d' },
+      free: { day:'free-secret',g:'g-f', h:'h-f', unlocked:'unlocked-f',   revealed:'revealed-f', w:'w-f', t:'t-f' }
     };
     const people = [
       {name:'Morten',birthYear:2008,height:182,residence:'Ølen',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Morten.jpeg'},
@@ -136,7 +128,7 @@
       {name:'Sina',birthYear:2007,height:175,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'F',imageUrl:'Sina.jpg'}
     ];
 
-    // DOM refs
+    // DOM
     const modeToggle = document.getElementById('modeToggle'),
           resetFree  = document.getElementById('resetFree'),
           modeLabel  = document.getElementById('modeLabel'),
@@ -156,19 +148,21 @@
     let mode='daily', guesses, hintCount, hintUnlocked, hintRevealed, won, total, secretIdx, secret;
 
     function applyModeUI(){
-      modeToggle.textContent = mode==='daily'?'Freeplay':'Daily';
+      modeToggle.textContent = mode==='daily' ? 'Freeplay' : 'Daily';
       modeToggle.className   = mode;
-      modeLabel.textContent  = mode==='daily'?'Daily':'Freeplay';
+      modeLabel.textContent  = mode==='daily' ? 'Daily' : 'Freeplay';
       modeLabel.className    = 'mode '+mode;
-      winTitle.textContent   = mode==='daily'?"Today's Ølendle Was…":"Ølendle Was…";
-      resetFree.style.display= mode==='free'?'block':'none';
+      winTitle.textContent   = mode==='daily'
+                                ? "Today's Ølendle Was…"
+                                : "Ølendle Was…";
+      resetFree.style.display = mode==='free' ? 'block' : 'none';
     }
 
     function initState(){
-      const nowDay=Math.floor(osloNow().getTime()/DAY_MS),
-            k     = KEYS[mode];
+      const nowDay = Math.floor(osloNow().getTime()/DAY_MS),
+            k      = KEYS[mode];
 
-      // Daily auto-reset
+      // auto-reset daily once per day
       if(mode==='daily' && parseInt(localStorage.getItem(k.day),10)!==nowDay){
         localStorage.setItem(k.day,nowDay);
         localStorage.setItem(k.g,'[]');
@@ -178,54 +172,51 @@
         localStorage.removeItem(k.w);
       }
 
-      // Freeplay secret persist
+      // freeplay secret
       if(mode==='free'){
-        let idx=parseInt(localStorage.getItem(k.day),10);
+        let idx = parseInt(localStorage.getItem(k.day),10);
         if(isNaN(idx)){
-          idx=Math.floor(Math.random()*people.length);
+          idx = Math.floor(Math.random()*people.length);
           localStorage.setItem(k.day,idx);
         }
         secretIdx=idx;
       } else {
-        secretIdx=nowDay%people.length;
+        secretIdx = nowDay % people.length;
       }
-      secret=people[secretIdx];
+      secret = people[secretIdx];
 
-      guesses      = JSON.parse(localStorage.getItem(k.g))||[];
-      hintCount    = parseInt(localStorage.getItem(k.h),10)||5;
+      guesses      = JSON.parse(localStorage.getItem(k.g)) || [];
+      hintCount    = parseInt(localStorage.getItem(k.h),10) || 5;
       hintUnlocked = localStorage.getItem(k.unlocked)==='true';
       hintRevealed = localStorage.getItem(k.revealed)==='true';
       won          = localStorage.getItem(k.w)==='true';
-      total        = parseInt(localStorage.getItem(k.t),10)||0;
+      total        = parseInt(localStorage.getItem(k.t),10) || 0;
 
-      winTotal.textContent=total;
-      guessInput.disabled = won;
-      guessBtn.disabled   = won;
+      winTotal.textContent = total;
+      guessInput.disabled  = won;
+      guessBtn.disabled    = won;
 
-      // Unlock as soon as you hit zero guesses
-      if(hintCount<=0 && !hintUnlocked){
-        hintUnlocked=true;
+      // lock in unlocked as soon as hintCount hits zero
+      if(hintCount <= 0 && !hintUnlocked){
+        hintUnlocked = true;
         localStorage.setItem(k.unlocked,'true');
       }
 
-      // Draw hint button:
+      // render hint button once
       if(hintRevealed){
-        // Already clicked through
-        hintBox.textContent      = 'Residence: '+secret.residence;
+        hintBox.textContent      = 'Residence: ' + secret.residence;
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('locked');
       }
       else if(hintUnlocked){
-        // Zero guesses reached → Show Hint
         hintBox.textContent      = 'Show Hint';
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('locked');
       }
       else {
-        // Still counting down
-        hintBox.textContent      = 'Residence hint in '+hintCount+' guesses';
+        hintBox.textContent      = 'Residence hint in ' + hintCount + ' guesses';
         hintBox.style.background = 'rgba(200,200,200,0.4)';
         hintBox.style.color      = '#000';
         hintBox.classList.remove('locked');
@@ -260,7 +251,6 @@
           return td;
         }
 
-        // photo
         const tdImg=mk('');
         tdImg.innerHTML=`<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
         tr.appendChild(tdImg);
@@ -272,7 +262,7 @@
                          p.height===secret.height?'green':'wrong'));
 
         let cls = p.residence===secret.residence?'green'
-                : hintUnlocked                               ?'yellow'
+                : hintUnlocked?'yellow'
                 :'wrong';
         tr.appendChild(mk(compareCat(p.residence,secret.residence),cls));
 
@@ -316,11 +306,7 @@
         const d=document.createElement('div');
         d.className='suggestion';
         d.innerHTML=`<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
-        d.onclick=()=>{
-          guessInput.value=p.name;
-          suggBox.style.display='none';
-          guessInput.focus();
-        };
+        d.onclick=()=>{ guessInput.value=p.name; suggBox.style.display='none'; guessInput.focus(); };
         suggBox.appendChild(d);
       });
       suggBox.style.display='block';
@@ -328,7 +314,6 @@
     guessInput.addEventListener('blur',()=>setTimeout(()=>suggBox.style.display='none',100));
 
     function updateHint(){
-      // only need to update countdown→Show Hint
       if(!hintRevealed && hintUnlocked && hintCount>0===false){
         hintBox.textContent      = 'Show Hint';
         hintBox.style.background = '#fff';
@@ -351,9 +336,7 @@
     });
 
     function showWin(n,i,c){
-      winName.textContent  = n;
-      winPhoto.src         = i||'no-image.png';
-      winCount.textContent = c;
+      winName.textContent=n; winPhoto.src=i||'no-image.png'; winCount.textContent=c;
       winOverlay.classList.add('show');
     }
     winClose.addEventListener('click',()=>winOverlay.classList.remove('show'));
@@ -376,7 +359,7 @@
       }
     });
 
-    // Bootstrap
+    // Boot
     applyModeUI();
     initState();
     renderRows();
