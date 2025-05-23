@@ -4,125 +4,70 @@
   <meta charset="UTF-8" />
   <title>Ølendle</title>
   <style>
-    html, body {
-      height:100%; margin:0;
-      font-family:sans-serif; color:#fff; text-align:center;
-      background:
-        linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
-        url('background.jpg') center/cover no-repeat;
-      background-size: cover;
+    html, body { height:100%; margin:0; font-family:sans-serif; color:#fff; text-align:center;
+      background:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url('background.jpg') center/cover no-repeat;
+      background-size:cover;
     }
-    main {
-      position: relative;
-      max-width: 900px;
-      margin: 2rem auto;
-      background: rgba(255,255,255,0.1);
-      padding: 1rem;
-      border-radius: 8px;
+    main { position:relative; max-width:900px; margin:2rem auto; background:rgba(255,255,255,0.1);
+      padding:1rem; border-radius:8px;
     }
-    #modeToggle, #resetFree {
-      position:absolute; top:1rem;
-      padding:.5rem 1rem; border:none; border-radius:4px;
-      cursor:pointer; font-size:.9rem; color:#fff;
-    }
-    #modeToggle.daily { right:1rem; background:#9c27b0; }
-    #modeToggle.free  { right:1rem; background:#4caf50; }
-    #resetFree {
-      left:1rem; background:#ffeb3b; color:#000; display:none;
-    }
-    h1 { margin:0; font-size:3rem; }
-    .mode { display:block; margin-top:.25rem; font-size:2.5rem; }
-    .mode.daily { color:#4caf50; }
-    .mode.free  { color:#9c27b0; }
-    .byline { font-size:.9rem; opacity:.8; margin:.5rem 0 1rem; }
-    #winCounter { margin-bottom:1rem; font-size:1rem; }
+    #modeToggle,#resetFree { position:absolute; top:1rem; padding:.5rem 1rem; border:none;
+      border-radius:4px; cursor:pointer; font-size:.9rem; }
+    #modeToggle.daily{ right:1rem; background:#9c27b0; color:#fff; }
+    #modeToggle.free { right:1rem; background:#4caf50; color:#fff; }
+    #resetFree{ left:1rem; background:#ffeb3b; color:#000; display:none; }
+    h1{ margin:0; font-size:3rem; }
+    .mode{ display:block; margin-top:.25rem; font-size:2.5rem; }
+    .mode.daily{ color:#4caf50; } .mode.free{ color:#9c27b0; }
+    .byline{ font-size:.9rem; opacity:.8; margin:.5rem 0 1rem; }
+    #winCounter{ margin-bottom:1rem; font-size:1rem; }
 
-    .input-group {
-      display:flex; width:60%; margin:0 auto; position:relative;
-    }
-    #guessInput {
-      flex:1; padding:.75rem; font-size:1rem; border:none;
-      border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2);
-      color:#fff; box-sizing:border-box;
-    }
-    #guessBtn {
-      padding:0 1rem; font-size:1rem; border:none;
-      border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2);
-      color:#fff; cursor:pointer;
-    }
-    #guessBtn:disabled { opacity:.5; cursor:not-allowed; }
+    .input-group{ display:flex; width:60%; margin:0 auto; position:relative; }
+    #guessInput{ flex:1; padding:.75rem; font-size:1rem; border:none;
+      border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2); color:#fff; }
+    #guessBtn{ padding:0 1rem; font-size:1rem; border:none; border-radius:0 4px 4px 0;
+      background:rgba(255,255,255,0.2); color:#fff; cursor:pointer; }
+    #guessBtn:disabled{ opacity:.5; cursor:not-allowed; }
 
-    #suggestions {
-      position:absolute; top:100%; left:0; width:100%;
-      max-height:200px; overflow-y:auto;
-      background:#fff; color:#000; border-radius:4px;
-      display:none; z-index:10;
-    }
-    .suggestion {
-      display:flex; align-items:center; padding:.25rem; cursor:pointer;
-    }
-    .suggestion:hover { background:#eee; }
-    .suggestion img {
-      width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:.5rem;
-    }
+    #suggestions{ position:absolute; top:100%; left:0; width:100%; max-height:200px; overflow-y:auto;
+      background:#fff; color:#000; border-radius:4px; display:none; z-index:10; }
+    .suggestion{ display:flex; align-items:center; padding:.25rem; cursor:pointer; }
+    .suggestion img{ width:40px; height:40px; object-fit:cover; border-radius:50%; margin-right:.5rem; }
+    .suggestion:hover{ background:#eee; }
 
-    #hintBox {
-      width:60%; margin:1rem auto; padding:.5rem 1rem;
-      background:rgba(200,200,200,0.4); color:#000;
-      border-radius:4px; cursor:pointer;
-      transition: background .3s, color .3s;
-    }
-    #hintBox.disabled { cursor:default; }
+    #hintBox{ width:60%; margin:1rem auto; padding:.5rem 1rem; background:rgba(200,200,200,0.4);
+      color:#000; border-radius:4px; cursor:pointer; transition:background .3s,color .3s; }
+    #hintBox.disabled{ cursor:default; }
 
-    .table-wrapper { overflow-x:auto; margin-top:1rem; }
-    table {
-      width:100%; min-width:700px; border-collapse:collapse;
-      background:rgba(255,255,255,0.1);
-    }
-    th, td {
-      padding:.5rem; white-space:nowrap;
-      border:1px solid rgba(255,255,255,0.3);
-      color:#fff; background:rgba(255,255,255,0.1);
-    }
-    th { background:rgba(255,255,255,0.2); }
-    .green  { background:rgba(136,232,140,0.7)!important; }
-    .yellow { background:rgba(254,240,138,0.7)!important; color:#333; }
-    .wrong  { background:rgba(240,100,100,0.7)!important; }
-    .winner-row td { background:rgba(136,232,140,0.7)!important; }
+    .table-wrapper{ overflow-x:auto; margin-top:1rem; }
+    table{ width:100%; min-width:700px; border-collapse:collapse; background:rgba(255,255,255,0.1); }
+    th, td{ padding:.5rem; white-space:nowrap; border:1px solid rgba(255,255,255,0.3); color:#fff;
+      background:rgba(255,255,255,0.1); }
+    th{ background:rgba(255,255,255,0.2); }
+    .green{ background:rgba(136,232,140,0.7)!important; }
+    .yellow{ background:rgba(254,240,138,0.7)!important; color:#333; }
+    .wrong{ background:rgba(240,100,100,0.7)!important; }
+    .winner-row td{ background:rgba(136,232,140,0.7)!important; }
 
-    img.person-photo {
-      width:60px;height:60px;object-fit:cover;
-      border-radius:50%; background:rgba(255,255,255,0.2);
-    }
+    img.person-photo{ width:60px; height:60px; object-fit:cover; border-radius:50%;
+      background:rgba(255,255,255,0.2); }
 
     @media(max-width:600px){
-      .input-group,#hintBox{width:100%;}
-      table{min-width:500px;}
-      img.person-photo{width:50px;height:50px;}
+      .input-group,#hintBox{ width:100%; }
+      table{ min-width:500px; }
+      img.person-photo{ width:50px; height:50px; }
     }
 
-    #winOverlay {
-      position:fixed; top:0; left:0; right:0; bottom:0;
-      background:rgba(0,0,0,0.8); display:flex;
-      align-items:center; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .5s;
-    }
-    #winOverlay.show { opacity:1; pointer-events:auto; }
-    #winContent {
-      position:relative; background:rgba(50,50,50,0.95);
-      padding:2rem; border-radius:8px; text-align:center;
-      max-width:90%;
-    }
-    #winClose {
-      position:absolute; top:8px; right:12px;
-      font-size:1.5rem; cursor:pointer; color:#fff;
-    }
-    #winContent img {
-      width:150px;height:150px;border-radius:50%;
-      object-fit:cover;border:2px solid #fff;
-    }
-    #winContent h2 { margin:1rem 0; font-size:1.5rem; }
-    #winContent p { margin-top:.5rem; font-size:1.2rem; }
+    #winOverlay{ position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8);
+      display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none;
+      transition:opacity .5s; }
+    #winOverlay.show{ opacity:1; pointer-events:auto; }
+    #winContent{ position:relative; background:rgba(50,50,50,0.95); padding:2rem;
+      border-radius:8px; text-align:center; max-width:90%; }
+    #winClose{ position:absolute; top:8px; right:12px; font-size:1.5rem; cursor:pointer; color:#fff; }
+    #winContent img{ width:150px; height:150px; object-fit:cover; border-radius:50%; border:2px solid #fff; }
+    #winContent h2{ margin:1rem 0; font-size:1.5rem; }
+    #winContent p{ margin-top:.5rem; font-size:1.2rem; }
   </style>
 </head>
 <body>
@@ -167,11 +112,17 @@
   </div>
 
   <script>
+    // Timezone helper
+    function osloNow() {
+      return new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Oslo" }));
+    }
+
     const DAY_MS = 24*60*60*1000;
-    const KEYS   = {
-      daily:{ day:'day-d',     g:'g-d',   h:'h-d', r:'r-d', w:'w-d', t:'t-d' },
-      free: { day:'free-secret',g:'g-f',   h:'h-f', r:'r-f', w:'w-f', t:'t-f' }
+    const KEYS = {
+      daily: { day:'day-d',     g:'g-d', h:'h-d', r:'r-d', w:'w-d', t:'t-d' },
+      free:  { day:'free-secret',g:'g-f', h:'h-f', r:'r-f', w:'w-f', t:'t-f' }
     };
+
     const people = [
       {name:'Morten',birthYear:2008,height:182,residence:'Ølen',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Morten.jpeg'},
       {name:'Thomas Andre',birthYear:2008,height:190,residence:'Ølensvåg',hairColor:'Brown',eyeColor:'Brown',gender:'M',imageUrl:'Thomas_Andre.jpg'},
@@ -184,29 +135,25 @@
       {name:'Sina',birthYear:2007,height:175,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'F',imageUrl:'Sina.jpg'}
     ];
 
-    // DOM refs
-    const modeToggle = document.getElementById('modeToggle'),
-          resetFree  = document.getElementById('resetFree'),
-          modeLabel  = document.getElementById('modeLabel'),
-          winTotal   = document.getElementById('winTotal'),
-          winTitle   = document.getElementById('winTitle'),
-          guessInput = document.getElementById('guessInput'),
-          guessBtn   = document.getElementById('guessBtn'),
-          suggBox    = document.getElementById('suggestions'),
-          tbody      = document.querySelector('#board tbody'),
-          hintBox    = document.getElementById('hintBox'),
-          hintCountElem = document.getElementById('hintCount'),
-          winOverlay = document.getElementById('winOverlay'),
-          winClose   = document.getElementById('winClose'),
-          winName    = document.getElementById('winName'),
-          winPhoto   = document.getElementById('winPhoto'),
-          winCount   = document.getElementById('winCount');
+    // DOM
+    const modeToggle   = document.getElementById('modeToggle');
+    const resetFree    = document.getElementById('resetFree');
+    const modeLabel    = document.getElementById('modeLabel');
+    const winTotal     = document.getElementById('winTotal');
+    const winTitle     = document.getElementById('winTitle');
+    const guessInput   = document.getElementById('guessInput');
+    const guessBtn     = document.getElementById('guessBtn');
+    const suggBox      = document.getElementById('suggestions');
+    const tbody        = document.querySelector('#board tbody');
+    const hintBox      = document.getElementById('hintBox');
+    const hintCountEl  = document.getElementById('hintCount');
+    const winOverlay   = document.getElementById('winOverlay');
+    const winClose     = document.getElementById('winClose');
+    const winName      = document.getElementById('winName');
+    const winPhoto     = document.getElementById('winPhoto');
+    const winCount     = document.getElementById('winCount');
 
     let mode='daily', today, guesses, hintCount, hintRevealed, won, total, secretIdx, secret;
-
-    function osloNow(){
-      return new Date(new Date().toLocaleString("en-US",{timeZone:"Europe/Oslo"}));
-    }
 
     function applyModeUI(){
       modeToggle.textContent = mode==='daily'?'Freeplay':'Daily';
@@ -214,23 +161,25 @@
       modeLabel.textContent  = mode==='daily'?'Daily':'Freeplay';
       modeLabel.className    = 'mode '+mode;
       winTitle.textContent   = mode==='daily'
-                                ? "Today's Ølendle Was…"
-                                : "Ølendle Was…";
-      resetFree.style.display= mode==='free'?'block':'none';
+                                  ? "Today's Ølendle Was…"
+                                  : "Ølendle Was…";
+      resetFree.style.display = mode==='free'?'block':'none';
     }
 
     function initState(){
-      const nowDay = Math.floor(osloNow().getTime()/DAY_MS),
-            k      = KEYS[mode];
-      // Daily auto-reset once per Oslo day
+      const nowDay = Math.floor(osloNow().getTime()/DAY_MS);
+      const k      = KEYS[mode];
+
+      // Daily auto-reset
       if(mode==='daily' && parseInt(localStorage.getItem(k.day),10)!==nowDay){
         localStorage.setItem(k.day, nowDay);
-        localStorage.setItem(k.g, '[]');
-        localStorage.setItem(k.h, '5');
+        localStorage.setItem(k.g,   '[]');
+        localStorage.setItem(k.h,   '5');
         localStorage.removeItem(k.r);
         localStorage.removeItem(k.w);
       }
-      // Freeplay: pick or reuse a secret index
+
+      // Freeplay secret persist
       if(mode==='free'){
         let idx = parseInt(localStorage.getItem(k.day),10);
         if(isNaN(idx)){
@@ -242,34 +191,33 @@
         secretIdx = nowDay % people.length;
       }
 
-      guesses       = JSON.parse(localStorage.getItem(k.g)) || [];
-      hintCount     = parseInt(localStorage.getItem(k.h),10) || 5;
-      hintRevealed  = localStorage.getItem(k.r)==='true';
-      won           = localStorage.getItem(k.w)==='true';
-      total         = parseInt(localStorage.getItem(k.t),10) || 0;
-      secret        = people[secretIdx];
+      guesses      = JSON.parse(localStorage.getItem(k.g))||[];
+      hintCount    = parseInt(localStorage.getItem(k.h),10)||5;
+      hintRevealed = localStorage.getItem(k.r)==='true';
+      won          = localStorage.getItem(k.w)==='true';
+      total        = parseInt(localStorage.getItem(k.t),10)||0;
+      secret       = people[secretIdx];
 
       winTotal.textContent  = total;
       guessInput.disabled   = won;
       guessBtn.disabled     = won;
 
-      // Restore hint button state
+      // Restore hint button
       if(hintRevealed){
-        hintBox.textContent = 'Residence: '+secret.residence;
-        hintBox.style.background = '#fff';
-        hintBox.style.color      = '#000';
+        hintBox.textContent     = 'Residence: ' + secret.residence;
+        hintBox.style.background= '#fff';
+        hintBox.style.color     = '#000';
         hintBox.classList.add('disabled');
-      } else if(hintCount > 0){
-        hintCountElem.textContent = hintCount;
-        hintBox.innerHTML = `Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
-        hintBox.style.background = 'rgba(200,200,200,0.4)';
-        hintBox.style.color      = '#000';
+      } else if(hintCount>0){
+        hintCountEl.textContent = hintCount;
+        hintBox.innerHTML       = `Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
+        hintBox.style.background= 'rgba(200,200,200,0.4)';
+        hintBox.style.color     = '#000';
         hintBox.classList.remove('disabled');
       } else {
-        // Transition to "Show Hint"
-        hintBox.textContent = 'Show Hint';
-        hintBox.style.background = '#fff';
-        hintBox.style.color      = '#000';
+        hintBox.textContent     = 'Show Hint';
+        hintBox.style.background= '#fff';
+        hintBox.style.color     = '#000';
         hintBox.classList.add('disabled');
       }
     }
@@ -284,12 +232,12 @@
     }
 
     function compareNum(v,s){
-      if(s===0) return v+' ↓';
+      if(s===0) return v + ' ↓';
       if(v===s) return v;
-      return v+' '+(v<s?'↑':'↓');
+      return v + ' ' + (v<s ? '↑' : '↓');
     }
     function compareCat(v,s){
-      if(s==='Unknown') return v+' ↓';
+      if(s==='Unknown') return v + ' ↓';
       return v;
     }
 
@@ -301,43 +249,46 @@
         const tr = document.createElement('tr');
         if(p===secret) tr.classList.add('winner-row');
 
-        // helper to create a td
-        const mk = (txt, cls='')=>{
+        function mk(txt, cls=''){
           const td = document.createElement('td');
           td.textContent = txt;
           if(cls) td.classList.add(cls);
           return td;
-        };
+        }
 
-        // Photo
+        // photo
         const tdImg = mk('');
         tdImg.innerHTML = `<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
         tr.appendChild(tdImg);
 
-        // Name
-        const tdName = mk(p.name, p===secret?'green':'');
-        tr.appendChild(tdName);
+        // name
+        tr.appendChild(mk(p.name, p===secret ? 'green' : ''));
 
-        // Birth Year
+        // birthYear
         tr.appendChild(mk(compareNum(p.birthYear, secret.birthYear),
-                         p.birthYear===secret.birthYear?'green':'wrong'));
-        // Height
+                         p.birthYear===secret.birthYear ? 'green' : 'wrong'));
+
+        // height
         tr.appendChild(mk(compareNum(p.height, secret.height),
-                         p.height===secret.height?'green':'wrong'));
-        // Residence
+                         p.height===secret.height ? 'green' : 'wrong'));
+
+        // residence
         let cls = p.residence===secret.residence ? 'green'
                 : secret.residence==='Unknown'   ? 'yellow'
                 : 'wrong';
         tr.appendChild(mk(compareCat(p.residence, secret.residence), cls));
-        // Hair Color
+
+        // hairColor
         tr.appendChild(mk(compareCat(p.hairColor, secret.hairColor),
-                         p.hairColor===secret.hairColor?'green':'wrong'));
-        // Gender
+                         p.hairColor===secret.hairColor ? 'green' : 'wrong'));
+
+        // gender
         tr.appendChild(mk(compareCat(p.gender, secret.gender),
-                         p.gender===secret.gender?'green':'wrong'));
-        // Eye Color
+                         p.gender===secret.gender ? 'green' : 'wrong'));
+
+        // eyeColor
         tr.appendChild(mk(compareCat(p.eyeColor, secret.eyeColor),
-                         p.eyeColor===secret.eyeColor?'green':'wrong'));
+                         p.eyeColor===secret.eyeColor ? 'green' : 'wrong'));
 
         tbody.appendChild(tr);
       });
@@ -361,13 +312,15 @@
       const v = guessInput.value.trim();
       if(!v) return;
       processGuess(v);
-      guessInput.value = '';
+      guessInput.value='';
       guessInput.focus();
     }
     guessBtn.addEventListener('click', submitGuess);
-    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
+    guessInput.addEventListener('keydown', e=>{
+      if(e.key==='Enter') submitGuess();
+    });
 
-    // Autocomplete using includes()
+    // Autocomplete (includes)
     guessInput.addEventListener('input', ()=>{
       const v = guessInput.value.trim().toLowerCase();
       suggBox.innerHTML = '';
@@ -378,11 +331,11 @@
       if(!matches.length){ suggBox.style.display='none'; return; }
       matches.forEach(p=>{
         const d = document.createElement('div');
-        d.className = 'suggestion';
-        d.innerHTML = `<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
+        d.className='suggestion';
+        d.innerHTML=`<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
         d.onclick = ()=>{
           guessInput.value = p.name;
-          suggBox.style.display = 'none';
+          suggBox.style.display='none';
           guessInput.focus();
         };
         suggBox.appendChild(d);
@@ -391,14 +344,20 @@
     });
     guessInput.addEventListener('blur', ()=>setTimeout(()=>suggBox.style.display='none',100));
 
-    // Hint button logic
+    // Hint update on every guess & mode switch
     function updateHint(){
-      // only need to handle change to "Show Hint"
+      // only transition countdown→Show Hint here
       if(!hintRevealed && hintCount===0){
         hintBox.textContent = 'Show Hint';
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('disabled');
+      } else if(!hintRevealed && hintCount>0) {
+        hintCountEl.textContent = hintCount;
+        hintBox.innerHTML = `Residence hint in <span id="hintCount">${hintCount}</span> guesses`;
+        hintBox.style.background = 'rgba(200,200,200,0.4)';
+        hintBox.style.color      = '#000';
+        hintBox.classList.remove('disabled');
       }
     }
     hintBox.addEventListener('click', ()=>{
@@ -421,7 +380,7 @@
     }
     winClose.addEventListener('click', ()=>winOverlay.classList.remove('show'));
 
-    // Mode switching
+    // Mode switch
     modeToggle.addEventListener('click', ()=>{
       mode = mode==='daily'?'free':'daily';
       applyModeUI();
@@ -445,7 +404,7 @@
       }
     });
 
-    // Startup
+    // Initialize
     applyModeUI();
     initState();
     renderRows();
