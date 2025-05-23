@@ -20,28 +20,25 @@
       padding: 1rem;
       border-radius: 8px;
     }
-    /* Mode toggle & reset */
     #modeToggle, #resetFree {
-      position: absolute; top: 1rem;
-      padding: 0.5rem 1rem; border: none; border-radius: 4px;
-      cursor: pointer; font-size: 0.9rem; color: #fff;
+      position:absolute; top:1rem;
+      padding:.5rem 1rem; border:none; border-radius:4px;
+      cursor:pointer; font-size:.9rem;
+      color:#fff;
     }
-    #modeToggle.daily { right:1rem; background:#9c27b0; } /* purple */
-    #modeToggle.free  { right:1rem; background:#4caf50; } /* green  */
+    #modeToggle.daily { right:1rem; background:#9c27b0; }
+    #modeToggle.free  { right:1rem; background:#4caf50; }
     #resetFree {
-      left:1rem; background:#ffeb3b; color:#000; display:none;
+      left:1rem; background:#ffeb3b; color:#000;
+      display:none;
     }
+    h1 {margin:0; font-size:3rem;}
+    .mode {display:block; margin-top:.25rem; font-size:2.5rem;}
+    .mode.daily {color:#4caf50;}
+    .mode.free  {color:#9c27b0;}
+    .byline {font-size:.9rem; opacity:.8; margin:.5rem 0 1rem;}
+    #winCounter {margin-bottom:1rem; font-size:1rem;}
 
-    h1 { margin:0; font-size:3rem; }
-    .mode {
-      display:block; margin-top:.25rem; font-size:2.5rem;
-    }
-    .mode.daily { color:#4caf50; } /* green */
-    .mode.free  { color:#9c27b0; } /* purple */
-    .byline { font-size:.9rem; opacity:.8; margin:.5rem 0 1rem; }
-    #winCounter { margin-bottom:1rem; font-size:1rem; }
-
-    /* Input + button */
     .input-group {
       display:flex; width:60%; margin:0 auto; position:relative;
     }
@@ -52,12 +49,11 @@
     }
     #guessBtn {
       padding:0 1rem; font-size:1rem; border:none;
-      border-radius:0 4px 4px 0; cursor:pointer;
-      background:rgba(255,255,255,0.2); color:#fff;
+      border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2);
+      color:#fff; cursor:pointer;
     }
-    #guessBtn:disabled { opacity:.5; cursor:not-allowed; }
+    #guessBtn:disabled {opacity:.5; cursor:not-allowed;}
 
-    /* Suggestions dropdown */
     #suggestions {
       position:absolute; top:100%; left:0; width:100%;
       max-height:200px; overflow-y:auto;
@@ -67,23 +63,21 @@
     .suggestion {
       display:flex; align-items:center; padding:.25rem; cursor:pointer;
     }
-    .suggestion:hover { background:#eee; }
+    .suggestion:hover {background:#eee;}
     .suggestion img {
-      width:40px; height:40px; object-fit:cover;
+      width:40px;height:40px; object-fit:cover;
       border-radius:50%; margin-right:.5rem;
     }
 
-    /* Hint box */
     #hintBox {
       width:60%; margin:1rem auto; padding:.5rem 1rem;
       background:rgba(200,200,200,0.4); color:#000;
       border-radius:4px; cursor:default;
     }
-    #hintBox.active { background:#fff; cursor:pointer; }
-    #hintReveal { margin-top:.5rem; }
+    #hintBox.active {background:#fff; cursor:pointer;}
+    #hintReveal {margin-top:.5rem;}
 
-    /* Table */
-    .table-wrapper { overflow-x:auto; margin-top:1rem; }
+    .table-wrapper {overflow-x:auto; margin-top:1rem;}
     table {
       width:100%; min-width:700px; border-collapse:collapse;
       background:rgba(255,255,255,0.1);
@@ -91,34 +85,32 @@
     th, td {
       padding:.5rem; white-space:nowrap;
       border:1px solid rgba(255,255,255,0.3);
-      color:#fff;
+      color:#fff; background:rgba(255,255,255,0.1);
     }
-    th { background:rgba(255,255,255,0.2); }
-    td { background:rgba(255,255,255,0.1); }
-    .green { background:rgba(136,232,140,0.7)!important; }
-    .yellow { background:rgba(254,240,138,0.7)!important; color:#333; }
-    .wrong { background:rgba(240,100,100,0.7)!important; }
-    .winner-row td { background:rgba(136,232,140,0.7)!important; }
+    th {background:rgba(255,255,255,0.2);}
+    .green  {background:rgba(136,232,140,0.7)!important;}
+    .yellow {background:rgba(254,240,138,0.7)!important; color:#333;}
+    .wrong  {background:rgba(240,100,100,0.7)!important;}
+    .winner-row td {background:rgba(136,232,140,0.7)!important;}
 
     img.person-photo {
       width:60px; height:60px; object-fit:cover;
       border-radius:50%; background:rgba(255,255,255,0.2);
     }
 
-    @media(max-width:600px) {
-      .input-group, #hintBox { width:100%; }
-      table { min-width:500px; }
-      img.person-photo { width:50px; height:50px; }
+    @media(max-width:600px){
+      .input-group,#hintBox{width:100%;}
+      table{min-width:500px;}
+      img.person-photo{width:50px;height:50px;}
     }
 
-    /* Win overlay */
     #winOverlay {
       position:fixed; top:0; left:0; right:0; bottom:0;
-      background:rgba(0,0,0,0.8);
-      display:flex; align-items:center; justify-content:center;
+      background:rgba(0,0,0,0.8); display:flex;
+      align-items:center; justify-content:center;
       opacity:0; pointer-events:none; transition:opacity .5s;
     }
-    #winOverlay.show { opacity:1; pointer-events:auto; }
+    #winOverlay.show {opacity:1; pointer-events:auto;}
     #winContent {
       position:relative; background:rgba(50,50,50,0.95);
       padding:2rem; border-radius:8px; text-align:center;
@@ -129,11 +121,11 @@
       font-size:1.5rem; cursor:pointer; color:#fff;
     }
     #winContent img {
-      width:150px; height:150px; object-fit:cover;
-      border:2px solid #fff; border-radius:50%;
+      width:150px;height:150px;border-radius:50%;
+      object-fit:cover;border:2px solid #fff;
     }
-    #winContent h2 { margin:1rem 0; font-size:1.5rem; }
-    #winContent p { margin-top:.5rem; font-size:1.2rem; }
+    #winContent h2 {margin:1rem 0; font-size:1.5rem;}
+    #winContent p {margin-top:.5rem; font-size:1.2rem;}
   </style>
 </head>
 <body>
@@ -179,18 +171,11 @@
   </div>
 
   <script>
-    // Utils
-    function osloNow() {
-      return new Date(
-        new Date().toLocaleString("en-US", { timeZone: "Europe/Oslo" })
-      );
-    }
     const DAY_MS = 24*60*60*1000;
     const KEYS = {
       daily: { day:'day-d', g:'g-d', h:'h-d', w:'w-d', t:'t-d' },
-      free : { day:'day-f', g:'g-f', h:'h-f', w:'w-f', t:'t-f' }
+      free : { day:'free-secret', g:'g-f', h:'h-f', w:'w-f', t:'t-f' }
     };
-
     const people = [
       {name:'Morten',birthYear:2008,height:182,residence:'Ølen',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Morten.jpeg'},
       {name:'Thomas Andre',birthYear:2008,height:190,residence:'Ølensvåg',hairColor:'Brown',eyeColor:'Brown',gender:'M',imageUrl:'Thomas_Andre.jpg'},
@@ -221,43 +206,63 @@
           winPhoto   = document.getElementById('winPhoto'),
           winCount   = document.getElementById('winCount');
 
-    let mode='daily', today, guesses, hintCount, won, total, secret;
+    let mode='daily', today, guesses, hintCount, hintRevealed, won, total, secretIdx;
 
     function applyModeUI(){
       modeToggle.textContent = mode==='daily'?'Freeplay':'Daily';
       modeToggle.className   = mode;
       modeLabel.textContent  = mode==='daily'?'Daily':'Freeplay';
       modeLabel.className    = 'mode '+mode;
-      winTitle.textContent   = mode==='daily'?'Daily Ølendle was…':'Ølendle was…';
+      winTitle.textContent   = mode==='daily'
+                                ? "Today's Ølendle Was…"
+                                : "Ølendle Was…";
       resetFree.style.display= mode==='free'?'block':'none';
     }
 
     function initState(){
-      const k = KEYS[mode];
       const now = Math.floor(osloNow().getTime()/DAY_MS);
-      if(mode==='daily'){
-        if(parseInt(localStorage.getItem(k.day),10)!==now){
-          localStorage.setItem(k.day,now);
-          localStorage.setItem(k.g,'[]');
-          localStorage.setItem(k.h,'5');
-          localStorage.removeItem(k.w);
-        }
+      const k   = KEYS[mode];
+      // Daily auto-reset on day change
+      if(mode==='daily' && parseInt(localStorage.getItem(k.day),10)!==now){
+        localStorage.setItem(k.day, now);
+        localStorage.setItem(k.g,'[]');
+        localStorage.setItem(k.h,'5');
+        localStorage.setItem(k.w,'false');
       }
-      // freeplay does NOT auto-reset
-      today     = now;
-      guesses   = JSON.parse(localStorage.getItem(k.g))||[];
-      hintCount = parseInt(localStorage.getItem(k.h),10)||5;
-      won       = localStorage.getItem(k.w)==='true';
-      total     = parseInt(localStorage.getItem(k.t),10)||0;
-      secret    = mode==='daily'
-                    ? people[now % people.length]
-                    : people[Math.floor(Math.random()*people.length)];
+      // Freeplay: pick or reuse secret index
+      if(mode==='free'){
+        let idx = parseInt(localStorage.getItem(k.day),10);
+        if(isNaN(idx)){
+          idx = Math.floor(Math.random()*people.length);
+          localStorage.setItem(k.day, idx);
+        }
+        today = idx;
+      } else {
+        today = now;
+      }
+
+      guesses        = JSON.parse(localStorage.getItem(k.g))||[];
+      hintCount      = parseInt(localStorage.getItem(k.h),10)||5;
+      hintRevealed   = localStorage.getItem(k.w)==='hint-revealed';
+      won            = localStorage.getItem(k.w)==='true';
+      total          = parseInt(localStorage.getItem(k.t),10)||0;
+      secretIdx      = mode==='daily'
+                         ? today % people.length
+                         : today;
+      secret         = people[secretIdx];
+
       winTotal.textContent = total;
-      // reset UI
-      guessInput.disabled = won;
-      guessBtn.disabled   = won;
-      hintReveal.textContent = '';
-      hintBox.style.display = 'block';
+      guessInput.disabled  = won;
+      guessBtn.disabled    = won;
+
+      // restore hint reveal
+      if(hintRevealed){
+        hintBox.style.display='none';
+        hintReveal.textContent = 'Residence: '+secret.residence;
+      } else {
+        hintReveal.textContent='';
+        hintBox.style.display='block';
+      }
     }
 
     function saveState(){
@@ -266,6 +271,7 @@
       localStorage.setItem(k.h, hintCount);
       localStorage.setItem(k.t, total);
       if(won) localStorage.setItem(k.w,'true');
+      if(hintRevealed) localStorage.setItem(k.w,'hint-revealed');
     }
 
     function compareNum(v,s){
@@ -281,64 +287,72 @@
     function renderRows(){
       tbody.innerHTML='';
       guesses.forEach(name=>{
-        const p = people.find(x=>x.name===name);
+        const p=people.find(x=>x.name===name);
         if(!p) return;
-        const tr = document.createElement('tr');
-        if(p.name===secret.name) tr.classList.add('winner-row');
+        const tr=document.createElement('tr');
+        if(p===secret) tr.classList.add('winner-row');
 
-        const mk = (text,cls='')=>{
+        const mk=(text,cls='')=>{
           const td=document.createElement('td');
           td.textContent=text;
           if(cls) td.classList.add(cls);
           return td;
         };
 
-        tr.appendChild(mk('', '')); // photo cell placeholder
-        const tdImg = tr.lastChild;
-        tdImg.innerHTML = `<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
+        // photo
+        const tdImg=mk('');
+        tdImg.innerHTML=`<img class="person-photo" src="${p.imageUrl||'no-image.png'}">`;
+        tr.appendChild(tdImg);
 
-        tr.appendChild(mk(p.name, p.name===secret.name?'green':''));
+        // name
+        tr.appendChild(mk(p.name, p===secret?'green':'' ));
 
-        let cls;
         // birthYear
-        cls = p.birthYear===secret.birthYear?'green':'wrong';
-        tr.appendChild(mk(compareNum(p.birthYear,secret.birthYear), cls));
+        tr.appendChild(mk(compareNum(p.birthYear,secret.birthYear),
+                         p.birthYear===secret.birthYear?'green':'wrong'));
+
         // height
-        cls = p.height===secret.height?'green':'wrong';
-        tr.appendChild(mk(compareNum(p.height,secret.height), cls));
+        tr.appendChild(mk(compareNum(p.height,secret.height),
+                         p.height===secret.height?'green':'wrong'));
+
         // residence
+        let cls;
         if(p.residence===secret.residence) cls='green';
         else if(secret.residence==='Unknown') cls='yellow';
         else cls='wrong';
         tr.appendChild(mk(compareCat(p.residence,secret.residence), cls));
-        // hair
-        cls = p.hairColor===secret.hairColor?'green':'wrong';
-        tr.appendChild(mk(compareCat(p.hairColor,secret.hairColor), cls));
+
+        // hairColor
+        tr.appendChild(mk(compareCat(p.hairColor,secret.hairColor),
+                         p.hairColor===secret.hairColor?'green':'wrong'));
+
         // gender
-        cls = p.gender===secret.gender?'green':'wrong';
-        tr.appendChild(mk(compareCat(p.gender,secret.gender), cls));
-        // eyes
-        cls = p.eyeColor===secret.eyeColor?'green':'wrong';
-        tr.appendChild(mk(compareCat(p.eyeColor,secret.eyeColor), cls));
+        tr.appendChild(mk(compareCat(p.gender,secret.gender),
+                         p.gender===secret.gender?'green':'wrong'));
+
+        // eyeColor
+        tr.appendChild(mk(compareCat(p.eyeColor,secret.eyeColor),
+                         p.eyeColor===secret.eyeColor?'green':'wrong'));
 
         tbody.appendChild(tr);
       });
     }
 
     function processGuess(v){
-      const p = people.find(x=>x.name.toLowerCase()===v.toLowerCase());
+      const p=people.find(x=>x.name.toLowerCase()===v.toLowerCase());
       if(!p||guesses.includes(p.name)) return;
       guesses.unshift(p.name);
       if(secret.residence!=='Unknown'&&hintCount>0) hintCount--;
-      if(p.name===secret.name){
-        won=true; total++;
+      if(p===secret){
+        won=true;
+        total++;
       }
       saveState();
       renderRows();
       updateHint();
-      if(p.name===secret.name) showWin(p.name,p.imageUrl,guesses.length);
-      guessInput.disabled = won;
-      guessBtn.disabled   = won;
+      if(p===secret) showWin(p.name,p.imageUrl,guesses.length);
+      guessInput.disabled=won;
+      guessBtn.disabled=won;
     }
 
     function submitGuess(){
@@ -348,22 +362,22 @@
       guessInput.value=''; guessInput.focus();
     }
 
-    guessBtn.addEventListener('click',submitGuess);
-    guessInput.addEventListener('keydown',e=>{ if(e.key==='Enter') submitGuess(); });
+    guessBtn.addEventListener('click', submitGuess);
+    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
 
     // autocomplete
-    guessInput.addEventListener('input',()=>{
+    guessInput.addEventListener('input', ()=>{
       const v=guessInput.value.trim().toLowerCase();
       suggBox.innerHTML='';
-      if(!v){ suggBox.style.display='none'; return; }
-      const matches = people
+      if(!v){suggBox.style.display='none'; return;}
+      const matches=people
         .filter(x=>x.name.toLowerCase().includes(v))
         .filter(x=>!guesses.includes(x.name));
-      if(!matches.length){ suggBox.style.display='none'; return; }
+      if(!matches.length){suggBox.style.display='none'; return;}
       matches.forEach(p=>{
         const d=document.createElement('div');
         d.className='suggestion';
-        d.innerHTML = `<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
+        d.innerHTML=`<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
         d.onclick=()=>{
           guessInput.value=p.name;
           suggBox.style.display='none';
@@ -373,7 +387,7 @@
       });
       suggBox.style.display='block';
     });
-    guessInput.addEventListener('blur',()=>setTimeout(()=>suggBox.style.display='none',100));
+    guessInput.addEventListener('blur', ()=>setTimeout(()=>suggBox.style.display='none',100));
 
     // hint
     function updateHint(){
@@ -389,41 +403,44 @@
       if(hintCount===0){
         hintBox.style.display='none';
         hintReveal.textContent='Residence: '+secret.residence;
+        hintRevealed=true;
+        saveState();
       }
     };
 
     // win overlay
     function showWin(name,img,count){
-      winName.textContent=name;
-      winPhoto.src=img||'no-image.png';
-      winCount.textContent=count;
+      document.getElementById('winName').textContent=name;
+      document.getElementById('winPhoto').src=img||'no-image.png';
+      document.getElementById('winCount').textContent=count;
       winOverlay.classList.add('show');
     }
-    winClose.addEventListener('click',()=>winOverlay.classList.remove('show'));
+    winClose.addEventListener('click', ()=>winOverlay.classList.remove('show'));
 
-    // mode switching
+    // mode switch
     modeToggle.addEventListener('click',()=>{
-      mode=mode==='daily'?'free':'daily';
+      mode = mode==='daily'?'free':'daily';
       applyModeUI();
       initState();
       renderRows();
       updateHint();
     });
 
-    // freeplay reset
-    resetFree.addEventListener('click',()=>{
+    // free reset
+    resetFree.addEventListener('click', ()=>{
       if(mode==='free'){
         const k=KEYS.free;
         localStorage.setItem(k.g,'[]');
         localStorage.setItem(k.h,'5');
         localStorage.removeItem(k.w);
+        localStorage.removeItem(k.day);
         initState();
         renderRows();
         updateHint();
       }
     });
 
-    // bootstrap
+    // init
     applyModeUI();
     initState();
     renderRows();
