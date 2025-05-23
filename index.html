@@ -10,88 +10,118 @@
         url('background.jpg') center/cover no-repeat;
       background-size: cover;
     }
-    main { position:relative; max-width:900px; margin:2rem auto;
-      background:rgba(255,255,255,0.1); padding:1rem; border-radius:8px;
+    main {
+      position:relative;
+      max-width:900px;
+      margin:2rem auto;
+      background:rgba(255,255,255,0.1);
+      padding:1rem;
+      border-radius:8px;
     }
-    /* Mode & Reset */
-    #modeToggle, #resetFree { position:absolute; top:1rem; padding:.5rem 1rem;
-      border:none; border-radius:4px; cursor:pointer; font-size:.9rem;
+    #modeToggle, #resetFree {
+      position:absolute; top:1rem;
+      padding:.5rem 1rem; border:none; border-radius:4px;
+      cursor:pointer; font-size:.9rem;
     }
     #modeToggle.daily { right:1rem; background:#9c27b0; color:#fff; }
     #modeToggle.free  { right:1rem; background:#4caf50; color:#fff; }
-    #resetFree { left:1rem; background:#ffeb3b; color:#000; display:none; }
-
+    #resetFree {
+      left:1rem; background:#ffeb3b; color:#000;
+      display:none;
+    }
     h1 { margin:0; font-size:3rem; }
     .mode { display:block; margin-top:.25rem; font-size:2.5rem; }
-    .mode.daily { color:#4caf50; } .mode.free { color:#9c27b0; }
+    .mode.daily { color:#4caf50; }
+    .mode.free  { color:#9c27b0; }
     .byline { font-size:.9rem; opacity:.8; margin:.5rem 0 1rem; }
     #winCounter { margin-bottom:1rem; font-size:1rem; }
 
-    /* Guess input */
-    .input-group { display:flex; width:60%; margin:0 auto; position:relative; }
-    #guessInput { flex:1; padding:.75rem; font-size:1rem; border:none;
-      border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2); color:#fff;
+    .input-group {
+      display:flex; width:60%; margin:0 auto; position:relative;
     }
-    #guessBtn { padding:0 1rem; font-size:1rem; border:none; border-radius:0 4px 4px 0;
-      background:rgba(255,255,255,0.2); color:#fff; cursor:pointer;
+    #guessInput {
+      flex:1; padding:.75rem; font-size:1rem; border:none;
+      border-radius:4px 0 0 4px; background:rgba(255,255,255,0.2);
+      color:#fff;
+    }
+    #guessBtn {
+      padding:0 1rem; font-size:1rem; border:none;
+      border-radius:0 4px 4px 0; background:rgba(255,255,255,0.2);
+      color:#fff; cursor:pointer;
     }
     #guessBtn:disabled { opacity:.5; cursor:not-allowed; }
 
-    /* Autocomplete */
-    #suggestions { position:absolute; top:100%; left:0; width:100%; max-height:200px;
-      overflow-y:auto; background:#fff; color:#000; border-radius:4px;
+    #suggestions {
+      position:absolute; top:100%; left:0; width:100%;
+      max-height:200px; overflow-y:auto;
+      background:#fff; color:#000; border-radius:4px;
       display:none; z-index:10;
     }
-    .suggestion { display:flex; align-items:center; padding:.25rem; cursor:pointer; }
-    .suggestion img { width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:.5rem; }
+    .suggestion {
+      display:flex; align-items:center; padding:.25rem; cursor:pointer;
+    }
+    .suggestion img {
+      width:40px; height:40px; object-fit:cover;
+      border-radius:50%; margin-right:.5rem;
+    }
     .suggestion:hover { background:#eee; }
 
-    /* Hint button */
-    #hintBox { width:60%; margin:1rem auto; padding:.5rem 1rem;
-      border-radius:4px; cursor:pointer; background:rgba(200,200,200,0.4); color:#000;
+    #hintBox {
+      width:60%; margin:1rem auto; padding:.5rem 1rem;
+      border-radius:4px; cursor:pointer;
+      background:rgba(200,200,200,0.4); color:#000;
       transition:background .3s,color .3s;
     }
     #hintBox.disabled { cursor:default; }
 
-    /* Table */
     .table-wrapper { overflow-x:auto; margin-top:1rem; }
-    table { width:100%; min-width:700px; border-collapse:collapse; background:rgba(255,255,255,0.1); }
-    th,td { padding:.5rem; white-space:nowrap; border:1px solid rgba(255,255,255,0.3);
+    table {
+      width:100%; min-width:700px; border-collapse:collapse;
+      background:rgba(255,255,255,0.1);
+    }
+    th, td {
+      padding:.5rem; white-space:nowrap;
+      border:1px solid rgba(255,255,255,0.3);
       color:#fff; background:rgba(255,255,255,0.1);
     }
     th { background:rgba(255,255,255,0.2); }
-    .green { background:rgba(136,232,140,0.7)!important; }
+    .green  { background:rgba(136,232,140,0.7)!important; }
     .yellow { background:rgba(254,240,138,0.7)!important; color:#333; }
-    .wrong { background:rgba(240,100,100,0.7)!important; }
+    .wrong  { background:rgba(240,100,100,0.7)!important; }
     .winner-row td { background:rgba(136,232,140,0.7)!important; }
 
-    img.person-photo { width:60px;height:60px;object-fit:cover;border-radius:50%;
-      background:rgba(255,255,255,0.2);
+    img.person-photo {
+      width:60px; height:60px; object-fit:cover;
+      border-radius:50%; background:rgba(255,255,255,0.2);
     }
-
     @media(max-width:600px){
-      .input-group,#hintBox { width:100%; }
+      .input-group, #hintBox { width:100%; }
       table { min-width:500px; }
-      img.person-photo { width:50px;height:50px; }
+      img.person-photo { width:50px; height:50px; }
     }
 
-    /* Win overlay */
-    #winOverlay { position:fixed; top:0; left:0; right:0; bottom:0;
-      background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center;
+    #winOverlay {
+      position:fixed; top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.8);
+      display:flex; align-items:center; justify-content:center;
       opacity:0; pointer-events:none; transition:opacity .5s;
     }
     #winOverlay.show { opacity:1; pointer-events:auto; }
-    #winContent { position:relative; background:rgba(50,50,50,0.95);
-      padding:2rem; border-radius:8px; text-align:center; max-width:90%;
+    #winContent {
+      position:relative; background:rgba(50,50,50,0.95);
+      padding:2rem; border-radius:8px; text-align:center;
+      max-width:90%;
     }
-    #winClose { position:absolute; top:8px; right:12px; font-size:1.5rem;
-      cursor:pointer; color:#fff;
+    #winClose {
+      position:absolute; top:8px; right:12px;
+      font-size:1.5rem; cursor:pointer; color:#fff;
     }
-    #winContent img { width:150px;height:150px;object-fit:cover;
-      border:2px solid #fff;border-radius:50%;
+    #winContent img {
+      width:150px; height:150px; object-fit:cover;
+      border-radius:50%; border:2px solid #fff;
     }
-    #winContent h2{ margin:1rem 0; font-size:1.5rem; }
-    #winContent p{ margin-top:.5rem; font-size:1.2rem; }
+    #winContent h2 { margin:1rem 0; font-size:1.5rem; }
+    #winContent p { margin-top:.5rem; font-size:1.2rem; }
   </style>
 </head>
 <body>
@@ -116,8 +146,14 @@
       <table id="board">
         <thead>
           <tr>
-            <th></th><th>Name</th><th>Birth&nbsp;Year</th><th>Height</th>
-            <th>Residence</th><th>Hair&nbsp;Color</th><th>Gender</th><th>Eye&nbsp;Color</th>
+            <th></th>
+            <th>Name</th>
+            <th>Birth Year</th>
+            <th>Height</th>
+            <th>Residence</th>
+            <th>Hair Color</th>
+            <th>Gender</th>
+            <th>Eye Color</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -136,29 +172,27 @@
   </div>
 
   <script>
-    // Oslo‐time helper
-    function osloNow(){
-      return new Date(new Date()
-        .toLocaleString("en-US",{timeZone:"Europe/Oslo"})
-      );
+    // Helper to get Oslo‐time date
+    function osloNow() {
+      return new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Oslo" }));
     }
 
-    const DAY_MS = 24*60*60*1000;
+    const DAY_MS = 24 * 60 * 60 * 1000;
     const KEYS = {
-      daily:{ day:'day-d',     g:'g-d',    h:'h-d',    r:'r-d',    w:'w-d',    t:'t-d' },
-      free: { day:'free-secret',g:'g-f',    h:'h-f',    r:'r-f',    w:'w-f',    t:'t-f' }
+      daily: { day:'day-d', g:'g-d',   h:'h-d', r:'r-d', w:'w-d', t:'t-d' },
+      free:  { day:'free-secret', g:'g-f', h:'h-f', r:'r-f', w:'w-f', t:'t-f' }
     };
 
     const people = [
-      {name:'Morten',birthYear:2008,height:182,residence:'Ølen',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Morten.jpeg'},
-      {name:'Thomas Andre',birthYear:2008,height:190,residence:'Ølensvåg',hairColor:'Brown',eyeColor:'Brown',gender:'M',imageUrl:'Thomas_Andre.jpg'},
-      {name:'Eirik',birthYear:2008,height:176,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'M',imageUrl:'Eirik.jpg'},
-      {name:'Sasha',birthYear:2008,height:182,residence:'Haugesund',hairColor:'Brown',eyeColor:'Blue',gender:'M',imageUrl:'Sasha.jpg'},
-      {name:'Dan Evan',birthYear:2008,height:180,residence:'Ølensvåg',hairColor:'Black',eyeColor:'Brown',gender:'M',imageUrl:'Dan_Evan.jpg'},
-      {name:'Endre',birthYear:2008,height:182,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'M',imageUrl:'Endre.jpg'},
-      {name:'Gabri',birthYear:2007,height:182,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'M',imageUrl:'Gabri.jpg'},
-      {name:'Ridwan',birthYear:2007,height:194,residence:'Skjold',hairColor:'Black',eyeColor:'Brown',gender:'M',imageUrl:'Ridwan.jpg'},
-      {name:'Sina',birthYear:2007,height:175,residence:'Ølen',hairColor:'Blonde',eyeColor:'Blue',gender:'F',imageUrl:'Sina.jpg'}
+      { name:'Morten',       birthYear:2008, height:182, residence:'Ølen',      hairColor:'Brown', eyeColor:'Blue',  gender:'M', imageUrl:'Morten.jpeg' },
+      { name:'Thomas Andre', birthYear:2008, height:190, residence:'Ølensvåg', hairColor:'Brown', eyeColor:'Brown', gender:'M', imageUrl:'Thomas_Andre.jpg' },
+      { name:'Eirik',        birthYear:2008, height:176, residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M', imageUrl:'Eirik.jpg' },
+      { name:'Sasha',        birthYear:2008, height:182, residence:'Haugesund', hairColor:'Brown',eyeColor:'Blue',  gender:'M', imageUrl:'Sasha.jpg' },
+      { name:'Dan Evan',     birthYear:2008, height:180, residence:'Ølensvåg', hairColor:'Black',eyeColor:'Brown', gender:'M', imageUrl:'Dan_Evan.jpg' },
+      { name:'Endre',        birthYear:2008, height:182, residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M', imageUrl:'Endre.jpg' },
+      { name:'Gabri',        birthYear:2007, height:182, residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'M', imageUrl:'Gabri.jpg' },
+      { name:'Ridwan',       birthYear:2007, height:194, residence:'Skjold',    hairColor:'Black',eyeColor:'Brown', gender:'M', imageUrl:'Ridwan.jpg' },
+      { name:'Sina',         birthYear:2007, height:175, residence:'Ølen',      hairColor:'Blonde',eyeColor:'Blue',  gender:'F', imageUrl:'Sina.jpg' }
     ];
 
     // DOM refs
@@ -178,68 +212,74 @@
           winPhoto   = document.getElementById('winPhoto'),
           winCount   = document.getElementById('winCount');
 
-    let mode='daily', today, guesses, hintCount, hintRevealed, won, total, secretIdx, secret;
+    let mode = 'daily',
+        guesses,
+        hintCount,
+        hintRevealed,
+        won,
+        total,
+        secretIdx,
+        secret;
 
-    function applyModeUI(){
-      modeToggle.textContent = mode==='daily'?'Freeplay':'Daily';
+    function applyModeUI() {
+      modeToggle.textContent = mode === 'daily' ? 'Freeplay' : 'Daily';
       modeToggle.className   = mode;
-      modeLabel.textContent  = mode==='daily'?'Daily':'Freeplay';
-      modeLabel.className    = 'mode '+mode;
-      winTitle.textContent   = mode==='daily'
+      modeLabel.textContent  = mode === 'daily' ? 'Daily' : 'Freeplay';
+      modeLabel.className    = 'mode ' + mode;
+      winTitle.textContent   = mode === 'daily'
         ? "Today's Ølendle Was…"
         : "Ølendle Was…";
-      resetFree.style.display= mode==='free'?'block':'none';
+      resetFree.style.display = mode === 'free' ? 'block' : 'none';
     }
 
-    function initState(){
-      const nowDay = Math.floor(osloNow().getTime()/DAY_MS),
+    function initState() {
+      const nowDay = Math.floor(osloNow().getTime() / DAY_MS),
             k      = KEYS[mode];
 
-      // Daily reset once per day
-      if(mode==='daily' && parseInt(localStorage.getItem(k.day),10)!==nowDay){
+      // Auto-reset daily once per Oslo day
+      if (mode === 'daily' && parseInt(localStorage.getItem(k.day), 10) !== nowDay) {
         localStorage.setItem(k.day, nowDay);
-        localStorage.setItem(k.g,   '[]`);
-        localStorage.setItem(k.h,   '5`);
+        localStorage.setItem(k.g, '[]');
+        localStorage.setItem(k.h, '5');
         localStorage.removeItem(k.r);
         localStorage.removeItem(k.w);
       }
 
-      // Freeplay: pick or reuse secret
-      if(mode==='free'){
-        let idx = parseInt(localStorage.getItem(k.day),10);
-        if(isNaN(idx)){
-          idx = Math.floor(Math.random()*people.length);
+      // Freeplay: persistent secret index
+      if (mode === 'free') {
+        let idx = parseInt(localStorage.getItem(k.day), 10);
+        if (isNaN(idx)) {
+          idx = Math.floor(Math.random() * people.length);
           localStorage.setItem(k.day, idx);
         }
         secretIdx = idx;
       } else {
         secretIdx = nowDay % people.length;
       }
+      secret = people[secretIdx];
 
-      guesses       = JSON.parse(localStorage.getItem(k.g))||[];
-      hintCount     = parseInt(localStorage.getItem(k.h),10)  || 5;
-      hintRevealed  = localStorage.getItem(k.r)==='true';
-      won           = localStorage.getItem(k.w)==='true';
-      total         = parseInt(localStorage.getItem(k.t),10)|| 0;
-      secret        = people[secretIdx];
+      guesses      = JSON.parse(localStorage.getItem(k.g)) || [];
+      hintCount    = parseInt(localStorage.getItem(k.h), 10) || 5;
+      hintRevealed = localStorage.getItem(k.r) === 'true';
+      won          = localStorage.getItem(k.w) === 'true';
+      total        = parseInt(localStorage.getItem(k.t), 10) || 0;
 
       winTotal.textContent = total;
       guessInput.disabled  = won;
       guessBtn.disabled    = won;
 
-      // REDRAW HINT BUTTON
-      if(hintRevealed){
+      // **REDRAW hint button exactly once per init**
+      if (hintRevealed) {
         hintBox.textContent      = 'Residence: ' + secret.residence;
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('disabled');
-      } else if(hintCount > 0){
+      } else if (hintCount > 0) {
         hintBox.textContent      = 'Residence hint in ' + hintCount + ' guesses';
         hintBox.style.background = 'rgba(200,200,200,0.4)';
         hintBox.style.color      = '#000';
         hintBox.classList.remove('disabled');
       } else {
-        // reached zero, unlocked
         hintBox.textContent      = 'Show Hint';
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
@@ -247,37 +287,37 @@
       }
     }
 
-    function saveState(){
+    function saveState() {
       const k = KEYS[mode];
       localStorage.setItem(k.g, JSON.stringify(guesses));
       localStorage.setItem(k.h, hintCount);
       localStorage.setItem(k.t, total);
-      if(hintRevealed) localStorage.setItem(k.r, 'true');
-      if(won)           localStorage.setItem(k.w, 'true');
+      if (hintRevealed) localStorage.setItem(k.r, 'true');
+      if (won)           localStorage.setItem(k.w, 'true');
     }
 
-    function compareNum(v,s){
-      if(s===0) return v + ' ↓';
-      if(v===s) return v;
+    function compareNum(v, s) {
+      if (s === 0) return v + ' ↓';
+      if (v === s) return v;
       return v + ' ' + (v < s ? '↑' : '↓');
     }
-    function compareCat(v,s){
-      if(s==='Unknown') return v + ' ↓';
+    function compareCat(v, s) {
+      if (s === 'Unknown') return v + ' ↓';
       return v;
     }
 
-    function renderRows(){
+    function renderRows() {
       tbody.innerHTML = '';
-      guesses.forEach(name=>{
-        const p = people.find(x=>x.name===name);
-        if(!p) return;
+      guesses.forEach(name => {
+        const p = people.find(x => x.name === name);
+        if (!p) return;
         const tr = document.createElement('tr');
-        if(p===secret) tr.classList.add('winner-row');
+        if (p === secret) tr.classList.add('winner-row');
 
-        function mk(txt, cls=''){
+        function mk(txt, cls = '') {
           const td = document.createElement('td');
           td.textContent = txt;
-          if(cls) td.classList.add(cls);
+          if (cls) td.classList.add(cls);
           return td;
         }
 
@@ -287,103 +327,110 @@
         tr.appendChild(tdImg);
 
         // Name
-        tr.appendChild(mk(p.name, p===secret?'green':'' ));
+        tr.appendChild(mk(p.name, p === secret ? 'green' : ''));
 
-        // Year
-        tr.appendChild(mk(compareNum(p.birthYear,secret.birthYear),
-                         p.birthYear===secret.birthYear?'green':'wrong'));
-
+        // Birth Year
+        tr.appendChild(mk(
+          compareNum(p.birthYear, secret.birthYear),
+          p.birthYear === secret.birthYear ? 'green' : 'wrong'
+        ));
         // Height
-        tr.appendChild(mk(compareNum(p.height,secret.height),
-                         p.height===secret.height?'green':'wrong'));
-
+        tr.appendChild(mk(
+          compareNum(p.height, secret.height),
+          p.height === secret.height ? 'green' : 'wrong'
+        ));
         // Residence
-        let cls = p.residence===secret.residence ? 'green'
-                : secret.residence==='Unknown'   ? 'yellow'
+        let cls = p.residence === secret.residence ? 'green'
+                : secret.residence === 'Unknown'   ? 'yellow'
                 : 'wrong';
-        tr.appendChild(mk(compareCat(p.residence,secret.residence), cls));
-
-        // Hair
-        tr.appendChild(mk(compareCat(p.hairColor,secret.hairColor),
-                         p.hairColor===secret.hairColor?'green':'wrong'));
-
+        tr.appendChild(mk(
+          compareCat(p.residence, secret.residence),
+          cls
+        ));
+        // Hair Color
+        tr.appendChild(mk(
+          compareCat(p.hairColor, secret.hairColor),
+          p.hairColor === secret.hairColor ? 'green' : 'wrong'
+        ));
         // Gender
-        tr.appendChild(mk(compareCat(p.gender,secret.gender),
-                         p.gender===secret.gender?'green':'wrong'));
-
-        // Eyes
-        tr.appendChild(mk(compareCat(p.eyeColor,secret.eyeColor),
-                         p.eyeColor===secret.eyeColor?'green':'wrong'));
+        tr.appendChild(mk(
+          compareCat(p.gender, secret.gender),
+          p.gender === secret.gender ? 'green' : 'wrong'
+        ));
+        // Eye Color
+        tr.appendChild(mk(
+          compareCat(p.eyeColor, secret.eyeColor),
+          p.eyeColor === secret.eyeColor ? 'green' : 'wrong'
+        ));
 
         tbody.appendChild(tr);
       });
     }
 
-    function processGuess(v){
-      const p = people.find(x=>x.name.toLowerCase()===v.toLowerCase());
-      if(!p||guesses.includes(p.name)) return;
+    function processGuess(val) {
+      const p = people.find(x => x.name.toLowerCase() === val.toLowerCase());
+      if (!p || guesses.includes(p.name)) return;
       guesses.unshift(p.name);
-      if(secret.residence!=='Unknown' && hintCount>0) hintCount--;
-      if(p===secret) { won=true; total++; }
+      if (secret.residence !== 'Unknown' && hintCount > 0) hintCount--;
+      if (p === secret) { won = true; total++; }
       saveState();
       renderRows();
       updateHint();
-      if(p===secret) showWin(p.name,p.imageUrl,guesses.length);
+      if (p === secret) showWin(p.name, p.imageUrl, guesses.length);
       guessInput.disabled = won;
       guessBtn.disabled   = won;
     }
 
-    function submitGuess(){
+    function submitGuess() {
       const v = guessInput.value.trim();
-      if(!v) return;
+      if (!v) return;
       processGuess(v);
       guessInput.value = '';
       guessInput.focus();
     }
     guessBtn.addEventListener('click', submitGuess);
-    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGuess(); });
+    guessInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitGuess(); });
 
-    // Autocomplete (contains)
-    guessInput.addEventListener('input', ()=>{
-      const v=guessInput.value.trim().toLowerCase();
-      suggBox.innerHTML='';
-      if(!v){ suggBox.style.display='none'; return; }
+    // Autocomplete (includes)
+    guessInput.addEventListener('input', () => {
+      const v = guessInput.value.trim().toLowerCase();
+      suggBox.innerHTML = '';
+      if (!v) { suggBox.style.display = 'none'; return; }
       const matches = people
-        .filter(x=>x.name.toLowerCase().includes(v))
-        .filter(x=>!guesses.includes(x.name));
-      if(!matches.length){ suggBox.style.display='none'; return; }
-      matches.forEach(p=>{
-        const d=document.createElement('div');
-        d.className='suggestion';
-        d.innerHTML=`<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
-        d.onclick=()=>{
-          guessInput.value=p.name;
-          suggBox.style.display='none';
+        .filter(x => x.name.toLowerCase().includes(v))
+        .filter(x => !guesses.includes(x.name));
+      if (!matches.length) { suggBox.style.display = 'none'; return; }
+      matches.forEach(p => {
+        const d = document.createElement('div');
+        d.className = 'suggestion';
+        d.innerHTML = `<img src="${p.imageUrl||'no-image.png'}"><span>${p.name}</span>`;
+        d.onclick = () => {
+          guessInput.value = p.name;
+          suggBox.style.display = 'none';
           guessInput.focus();
         };
         suggBox.appendChild(d);
       });
-      suggBox.style.display='block';
+      suggBox.style.display = 'block';
     });
-    guessInput.addEventListener('blur', ()=>setTimeout(()=>suggBox.style.display='none',100));
+    guessInput.addEventListener('blur', () => setTimeout(() => suggBox.style.display = 'none', 100));
 
-    function updateHint(){
-      // only handle count→show hint transition
-      if(!hintRevealed && hintCount===0){
+    // Update hint text after each guess
+    function updateHint() {
+      if (!hintRevealed && hintCount > 0) {
+        hintBox.textContent = 'Residence hint in ' + hintCount + ' guesses';
+      }
+      if (!hintRevealed && hintCount === 0) {
         hintBox.textContent      = 'Show Hint';
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('disabled');
       }
-      // if still >0, just rewrite the count
-      else if(!hintRevealed && hintCount>0){
-        hintBox.textContent      = 'Residence hint in ' + hintCount + ' guesses';
-      }
     }
-    hintBox.addEventListener('click', ()=>{
-      if(!hintRevealed && hintCount===0){
+    hintBox.addEventListener('click', () => {
+      if (!hintRevealed && hintCount === 0) {
         hintRevealed = true;
-        hintBox.textContent      = 'Residence: '+secret.residence;
+        hintBox.textContent      = 'Residence: ' + secret.residence;
         hintBox.style.background = '#fff';
         hintBox.style.color      = '#000';
         hintBox.classList.add('disabled');
@@ -391,27 +438,30 @@
       }
     });
 
-    function showWin(name,img,count){
+    // Win overlay
+    function showWin(name, img, count) {
       winName.textContent  = name;
       winPhoto.src         = img||'no-image.png';
       winCount.textContent = count;
       winOverlay.classList.add('show');
     }
-    winClose.addEventListener('click', ()=>winOverlay.classList.remove('show'));
+    winClose.addEventListener('click', () => winOverlay.classList.remove('show'));
 
-    modeToggle.addEventListener('click', ()=>{
-      mode = mode==='daily'?'free':'daily';
+    // Mode switch
+    modeToggle.addEventListener('click', () => {
+      mode = mode === 'daily' ? 'free' : 'daily';
       applyModeUI();
       initState();
       renderRows();
       updateHint();
     });
 
-    resetFree.addEventListener('click', ()=>{
-      if(mode==='free'){
+    // Freeplay reset
+    resetFree.addEventListener('click', () => {
+      if (mode === 'free') {
         const k = KEYS.free;
-        localStorage.setItem(k.g,'[]');
-        localStorage.setItem(k.h,'5');
+        localStorage.setItem(k.g, '[]');
+        localStorage.setItem(k.h, '5');
         localStorage.removeItem(k.r);
         localStorage.removeItem(k.w);
         localStorage.removeItem(k.day);
@@ -421,7 +471,7 @@
       }
     });
 
-    // bootstrap
+    // Bootstrap
     applyModeUI();
     initState();
     renderRows();
